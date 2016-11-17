@@ -39,7 +39,7 @@ public class GpsLocation implements LocationListener{
     private GoogleMap googleMap;
     private Marker userMarker;
 
-    private int interval = 1500;
+    private int interval = 5000;
     private Handler handler;
     private boolean gpsUpdating;
 
@@ -66,7 +66,6 @@ public class GpsLocation implements LocationListener{
     Runnable mStatusChecker = new Runnable() {
         @Override
         public void run() {
-            Log.d("Geo_Location", "Run");
             if (gpsUpdating != true) {
                 gpsUpdating = true;
 
@@ -75,27 +74,7 @@ public class GpsLocation implements LocationListener{
                             MY_PERMISSION_ACCESS_COARSE_LOCATION);
                 }
 
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsLocation);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsLocation);
-                Log.d("Geo_Location", "Gps started updating");
-
-                if (location != null) {
-                    lat = (int) (location.getLatitude());
-                    lon = (int) (location.getLongitude());
-
-                    // Add a marker in Sydney and move the camera
-                    LatLng sydney = new LatLng(lat, lon);
-                    if (userMarker == null) {
-                        userMarker = googleMap.addMarker(new MarkerOptions().position(sydney).title("This is you!"));
-                    } else {
-                        userMarker.setPosition(sydney);
-                    }
-
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-                    Log.d("Geo_Location", "Latitude: " + lat + ", Longitude: " + lon);
-                }
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, gpsLocation);
             }
 
             handler.postDelayed(mStatusChecker, interval);
@@ -109,14 +88,14 @@ public class GpsLocation implements LocationListener{
         lon = location.getLongitude();
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(lat, lon);
+        LatLng latLng = new LatLng(lat, lon);
         if (userMarker == null) {
-            userMarker = googleMap.addMarker(new MarkerOptions().position(sydney).title("This is you!"));
+            userMarker = googleMap.addMarker(new MarkerOptions().position(latLng).title("This is you!"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
+            
         } else {
-            userMarker.setPosition(sydney);
+            userMarker.setPosition(latLng);
         }
-
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         Log.d("Geo_Location", "Latitude: " + lat + ", Longitude: " + lon);
 
