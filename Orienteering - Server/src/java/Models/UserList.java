@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +21,21 @@ public class UserList {
     
     public UserList(ArrayList<User> users)
     {
-        this.users = users;
+        setUsers(users);
     }
     
     public void add(User user)
     {
         users.add(user);
+    }
+    
+    public List<User> getUsers()
+    {
+        return this.users;
+    }
+    
+    public void setUsers(ArrayList<User> users)
+    {
+        this.users = users;
     }
 }

@@ -16,8 +16,10 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author jespe
  */
-public class UserGui extends HttpServlet {
+public class Api extends HttpServlet {
 
+    private DatabaseManager databaseManager;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -29,38 +31,28 @@ public class UserGui extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet UserDal</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet UserDal at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            databaseManager = new DatabaseManager();
             
-            DatabaseManager databaseManager = new DatabaseManager();
+            String apiRequest = request.getParameter("get");
             
-            UserList userList = new UserList(databaseManager.getUsers());
-            try {
-                XStream xstream = new XStream();
-                xstream.alias("user", User.class);
-                xstream.alias("users", UserList.class);
-                xstream.addImplicitCollection(UserList.class, "users");
-                out.println("OKK");
-
-                //PersonList list = new PersonList();
-                //list.add(new Person("ABC",12,"address"));
-                //list.add(new Person("XYZ",20,"address2"));
-
-                String xml = xstream.toXML(userList);
-
+            if (apiRequest != "" && apiRequest != null)
+            {
+                response.setContentType("text/xml;charset=UTF-8");
+                
+                String xml = "";
+                switch(apiRequest)
+                {
+                    case "userList":
+                        xml = getUserList();
+                        break;
+                }
+                
                 out.println(xml);
-            } catch (Exception e) {
-                e.printStackTrace();
+            }
+            else
+            {
+                out.println("Invalid request");
             }
         }
     }
@@ -93,15 +85,44 @@ public class UserGui extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
+    
+    private String getUserList()
+    {
+        String xml = "";
+        
+        UserList userList = new UserList(databaseManager.getUsers());
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("user", User.class);
+            xstream.alias("users", UserList.class);
+            xstream.addImplicitCollection(UserList.class, "users");
 
+            xml = xstream.toXML(userList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String getPointOfInterestList()
+    {
+        String xml = "";
+        
+        PointOfInterestList pointOfInterestList = new PointOfInterestList(databaseManager.getPointOfInterests());
+
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("point_of_interest", PointOfInterest.class);
+            xstream.alias("point_of_interests", PointOfInterestList.class);
+            xstream.addImplicitCollection(PointOfInterestList.class, "point_of_interests");
+
+            xml = xstream.toXML(pointOfInterestList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
 }
