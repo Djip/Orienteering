@@ -1,11 +1,8 @@
 // Loading required libraries
-import java.io.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import java.sql.*;
 
-public class DatabaseManager extends HttpServlet{
+public class DatabaseManager{
     final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     final String DB_URL = "jdbc:mysql://85.233.225.116:3306/orienteering";
 
