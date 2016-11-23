@@ -12,30 +12,30 @@ import java.util.List;
  * @author jespe
  */
 public class ToughnessList {
-    private List<Toughness> toughnesses;
+    private List<Toughness> toughnessList;
     
     public ToughnessList()
     {
-        toughnesses = new ArrayList<Toughness>();
+        toughnessList = new ArrayList<Toughness>();
     }
     
-    public ToughnessList(ArrayList<Toughness> toughnesses)
+    public ToughnessList(ArrayList<Toughness> toughnessList)
     {
-        setToughnesses(toughnesses);
+        setToughnessList(toughnessList);
     }
     
     public void add(Toughness toughness)
     {
-        toughnesses.add(toughness);
+        toughnessList.add(toughness);
     }
     
-    public List<Toughness> getToughnesses()
+    public List<Toughness> getToughnessList()
     {
-        return this.toughnesses;
+        return this.toughnessList;
     }
     
-    public void setToughnesses(ArrayList<Toughness> toughnesses)
+    public void setToughnessList(ArrayList<Toughness> toughnessList)
     {
-        this.toughnesses = toughnesses;
+        this.toughnessList = toughnessList;
     }
 }

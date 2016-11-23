@@ -66,7 +66,7 @@ public class DatabaseManager{
     
     public ArrayList<User> getUsers()
     {
-        ArrayList<User> users = new ArrayList<User>();;
+        ArrayList<User> users = new ArrayList<User>();
 
         try
         {
@@ -83,11 +83,6 @@ public class DatabaseManager{
             
             rs.close();
         }
-        catch(SQLException se)
-        {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        }
         catch(Exception e)
         {
             //Handle errors for Class.forName
@@ -103,7 +98,7 @@ public class DatabaseManager{
     
     public ArrayList<PointOfInterest> getPointOfInterests()
     {
-        ArrayList<PointOfInterest> point_of_interests = new ArrayList<PointOfInterest>();;
+        ArrayList<PointOfInterest> point_of_interests = new ArrayList<PointOfInterest>();
 
         try
         {
@@ -123,11 +118,6 @@ public class DatabaseManager{
             
             rs.close();
         }
-        catch(SQLException se)
-        {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        }
         catch(Exception e)
         {
             //Handle errors for Class.forName
@@ -143,7 +133,7 @@ public class DatabaseManager{
     
     public ArrayList<Route> getRoutes()
     {
-        ArrayList<Route> routes = new ArrayList<Route>();;
+        ArrayList<Route> routes = new ArrayList<Route>();
 
         try
         {
@@ -156,16 +146,12 @@ public class DatabaseManager{
                String code = rs.getString("code");
                int user_id = rs.getInt("user_id");
                int gametime = rs.getInt("gametime");
+               boolean show_default_point_of_interest = rs.getBoolean("show_deafult_point_of_interest");
 
-               routes.add(new Route(id, code, user_id, gametime));
+               routes.add(new Route(id, code, user_id, gametime, show_default_point_of_interest));
             }
             
             rs.close();
-        }
-        catch(SQLException se)
-        {
-            //Handle errors for JDBC
-            se.printStackTrace();
         }
         catch(Exception e)
         {
@@ -178,5 +164,106 @@ public class DatabaseManager{
         }
       
         return routes;
+    }
+    
+    public ArrayList<Question> getQuestions()
+    {
+        ArrayList<Question> questions = new ArrayList<Question>();
+
+        try
+        {
+            String sql = "SELECT * FROM question";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Extract data from result set
+            while(rs.next()){
+               int id = rs.getInt("id");
+               int category_id = rs.getInt("category_id");
+               int toughness_id = rs.getInt("toughness_id");
+               String question = rs.getString("question");
+               int plus_point = rs.getInt("plus_point");
+               int minus_point = rs.getInt("minus_point");
+               int route_id = rs.getInt("route_id");
+
+               questions.add(new Question(id, category_id, toughness_id, question, plus_point, minus_point, route_id));
+            }
+            
+            rs.close();
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+      
+        return questions;
+    }
+    
+    public ArrayList<Category> getCategories()
+    {
+        ArrayList<Category> categories = new ArrayList<Category>();
+
+        try
+        {
+            String sql = "SELECT * FROM category";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Extract data from result set
+            while(rs.next()){
+               int id = rs.getInt("id");
+               String category = rs.getString("category");
+
+               categories.add(new Category(id, category));
+            }
+            
+            rs.close();
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+      
+        return categories;
+    }
+    
+    public ArrayList<Toughness> getToughness()
+    {
+        ArrayList<Toughness> toughnessList = new ArrayList<Toughness>();
+
+        try
+        {
+            String sql = "SELECT * FROM toughness";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Extract data from result set
+            while(rs.next()){
+               int id = rs.getInt("id");
+               String toughness = rs.getString("toughness");
+
+               toughnessList.add(new Toughness(id, toughness));
+            }
+            
+            rs.close();
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+      
+        return toughnessList;
     }
 }

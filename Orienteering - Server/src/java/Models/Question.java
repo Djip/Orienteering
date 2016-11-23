@@ -13,15 +13,19 @@ public class Question {
     private int category_id;
     private int toughness_id;
     private int route_id;
+    private int plus_point;
+    private int minus_point;
     private String question;
     
-    public Question(int id, int category_id, int toughness_id, int route_id, String question)
+    public Question(int id, int category_id, int toughness_id, String question, int plus_point, int minus_point, int route_id)
     {
         setId(id);
         setCategoryId(category_id);
         setToughnessId(toughness_id);
-        setRouteId(route_id);
         setQuestion(question);
+        setPlusPoint(plus_point);
+        setMinusPoint(minus_point);
+        setRouteId(route_id);
     }
     
     public int getId()
@@ -54,6 +58,35 @@ public class Question {
         this.toughness_id = toughness_id;
     }
     
+    public String getQuestion(){
+        return this.question;
+    }
+    
+    public void setQuestion(String question)
+    {
+       this.question = question; 
+    }
+    
+    public int getPlusPoint()
+    {
+        return this.plus_point;
+    }
+    
+    public void setPlusPoint(int plus_point)
+    {
+        this.plus_point = plus_point;
+    }
+    
+    public int getMinusPoint()
+    {
+        return this.minus_point;
+    }
+    
+    public void setMinusPoint(int minus_point)
+    {
+        this.minus_point = minus_point;
+    }
+    
     public int getRouteId()
     {
         return this.route_id;
@@ -62,13 +95,5 @@ public class Question {
     public void setRouteId(int route_id)
     {
         this.route_id = route_id;
-    }
-    
-    public String getQuestion(){
-        return this.question;
-    }
-    
-    public void setQuestion(String question){
-       this.question = question; 
     }
 }

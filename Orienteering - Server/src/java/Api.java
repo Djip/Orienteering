@@ -8,9 +8,7 @@ import com.thoughtworks.xstream.XStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 /**
  *
@@ -53,6 +51,18 @@ public class Api extends HttpServlet {
                         
                     case "routeList":
                         xml = getRouteList();
+                        break;
+                        
+                    case "questionList":
+                        xml = getQuestionList();
+                        break;
+                        
+                    case "categoryList":
+                        xml = getCategoryList();
+                        break;
+                        
+                    case "toughnessList":
+                        xml = getToughnessList();
                         break;
                 }
                 
@@ -147,6 +157,66 @@ public class Api extends HttpServlet {
             xstream.addImplicitCollection(RouteList.class, "routes");
 
             xml = xstream.toXML(routeList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String getQuestionList()
+    {
+        String xml = "";
+        
+        QuestionList questionList = new QuestionList(databaseManager.getQuestions());
+
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("question", Question.class);
+            xstream.alias("questions", QuestionList.class);
+            xstream.addImplicitCollection(QuestionList.class, "questions");
+
+            xml = xstream.toXML(questionList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String getCategoryList()
+    {
+        String xml = "";
+        
+        CategoryList categoryList = new CategoryList(databaseManager.getCategories());
+
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("category", Category.class);
+            xstream.alias("categorys", CategoryList.class);
+            xstream.addImplicitCollection(CategoryList.class, "categories");
+
+            xml = xstream.toXML(categoryList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String getToughnessList()
+    {
+        String xml = "";
+        
+        ToughnessList toughnessList = new ToughnessList(databaseManager.getToughness());
+
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("toughness", Toughness.class);
+            xstream.alias("toughnessList", ToughnessList.class);
+            xstream.addImplicitCollection(ToughnessList.class, "toughnessList");
+
+            xml = xstream.toXML(toughnessList);
         } catch (Exception e) {
             e.printStackTrace();
         }

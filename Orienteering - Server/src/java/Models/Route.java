@@ -13,13 +13,15 @@ public class Route {
     private String code;
     private int user_id;
     private int gametime;
+    private boolean show_default_point_of_interest;
     
-    public Route(int id, String code, int user_id, int gametime)
+    public Route(int id, String code, int user_id, int gametime, boolean show_default_point_of_interest)
     {
         setId(id);
         setCode(code);
         setUserId(user_id);
         setGametime(gametime);
+        setShowDefaultPointOfInterest(show_default_point_of_interest);
     }
     
     public int getId()
@@ -60,5 +62,15 @@ public class Route {
     public void setGametime(int gametime)
     {
         this.gametime = gametime;
+    }
+    
+    public boolean getShowDefaultPointOfInterest()
+    {
+        return this.show_default_point_of_interest;
+    }
+    
+    public void setShowDefaultPointOfInterest(boolean show_default_point_of_interest)
+    {
+        this.show_default_point_of_interest = show_default_point_of_interest;
     }
 }
