@@ -46,6 +46,14 @@ public class Api extends HttpServlet {
                     case "userList":
                         xml = getUserList();
                         break;
+                        
+                    case "pointOfInterestList":
+                        xml = getPointOfInterestList();
+                        break;
+                        
+                    case "routeList":
+                        xml = getRouteList();
+                        break;
                 }
                 
                 out.println(xml);
@@ -119,6 +127,26 @@ public class Api extends HttpServlet {
             xstream.addImplicitCollection(PointOfInterestList.class, "point_of_interests");
 
             xml = xstream.toXML(pointOfInterestList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String getRouteList()
+    {
+        String xml = "";
+        
+        RouteList routeList = new RouteList(databaseManager.getRoutes());
+
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("route", Route.class);
+            xstream.alias("routes", RouteList.class);
+            xstream.addImplicitCollection(RouteList.class, "routes");
+
+            xml = xstream.toXML(routeList);
         } catch (Exception e) {
             e.printStackTrace();
         }

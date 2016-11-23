@@ -73,7 +73,7 @@ public class DatabaseManager extends HttpServlet{
 
         try
         {
-            String sql = "SELECT id, username FROM user";
+            String sql = "SELECT * FROM user";
             ResultSet rs = stmt.executeQuery(sql);
 
             // Extract data from result set
@@ -110,7 +110,7 @@ public class DatabaseManager extends HttpServlet{
 
         try
         {
-            String sql = "SELECT id, username FROM user";
+            String sql = "SELECT * FROM point_of_interest";
             ResultSet rs = stmt.executeQuery(sql);
 
             // Extract data from result set
@@ -142,5 +142,44 @@ public class DatabaseManager extends HttpServlet{
         }
       
         return point_of_interests;
+    }
+    
+    public ArrayList<Route> getRoutes()
+    {
+        ArrayList<Route> routes = new ArrayList<Route>();;
+
+        try
+        {
+            String sql = "SELECT * FROM route";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Extract data from result set
+            while(rs.next()){
+               int id  = rs.getInt("id");
+               String code = rs.getString("code");
+               int user_id = rs.getInt("user_id");
+               int gametime = rs.getInt("gametime");
+
+               routes.add(new Route(id, code, user_id, gametime));
+            }
+            
+            rs.close();
+        }
+        catch(SQLException se)
+        {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+      
+        return routes;
     }
 }
