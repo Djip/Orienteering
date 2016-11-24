@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -8,27 +9,46 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/backgroundColor"
     tools:context="orienteering.orienteering.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="150dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:weightSum="1">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="219dp"
+            app:srcCompat="@mipmap/compas"
+            android:id="@+id/imageView"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_weight="0.53" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Vælg et Brugernavn"
             android:textAlignment="center"
-            android:textSize="24dp"/>
+            android:layout_marginTop="20dp"
+            android:textSize="24dp"
+            android:textColor="@color/colorWhite"
+            />
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:textAlignment="center"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:textColor="@color/colorWhite"
+            />
+
         <Button
-            android:layout_width="200dp"
-            android:layout_height="50dp"
+            android:layout_width="199dp"
+            android:layout_height="wrap_content"
             android:textAlignment="center"
             android:text="Start"
             android:textSize="26dp"
@@ -38,4 +58,5 @@
             android:textColor="#FFFFFF"
             android:id="@+id/start_btn"/>
     </LinearLayout>
+
 </RelativeLayout>
