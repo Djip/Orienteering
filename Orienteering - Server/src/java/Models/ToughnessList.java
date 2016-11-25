@@ -12,11 +12,11 @@ import java.util.List;
  * @author jespe
  */
 public class ToughnessList {
-    private List<Toughness> toughnessList;
+    private List<Toughness> toughness_list;
     
     public ToughnessList()
     {
-        toughnessList = new ArrayList<Toughness>();
+        toughness_list = new ArrayList<Toughness>();
     }
     
     public ToughnessList(ArrayList<Toughness> toughnessList)
@@ -26,16 +26,16 @@ public class ToughnessList {
     
     public void add(Toughness toughness)
     {
-        toughnessList.add(toughness);
+        toughness_list.add(toughness);
     }
     
     public List<Toughness> getToughnessList()
     {
-        return this.toughnessList;
+        return this.toughness_list;
     }
     
-    public void setToughnessList(ArrayList<Toughness> toughnessList)
+    public void setToughnessList(ArrayList<Toughness> toughness_list)
     {
-        this.toughnessList = toughnessList;
+        this.toughness_list = toughness_list;
     }
 }

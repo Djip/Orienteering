@@ -64,6 +64,36 @@ public class Api extends HttpServlet {
                     case "toughnessList":
                         xml = getToughnessList();
                         break;
+                        
+                    case "answerList":
+                        String question_id_parameter = request.getParameter("question_id");
+                        try
+                        {
+                            int question_id = Integer.parseInt(question_id_parameter);
+                            xml = getAnswerList(question_id);
+                        }
+                        catch (Exception e)
+                        {
+                            out.println("<error>Wrong question_id</error>");
+                        }
+                        break;
+                        
+                    case "pointsList":
+                        String user_id_parameter = request.getParameter("user_id");
+                        String route_id_parameter = request.getParameter("route_id");
+                        try
+                        {
+                            int user_id = Integer.parseInt(user_id_parameter);
+                            int route_id = Integer.parseInt(route_id_parameter);
+                            
+                            xml = getPointsList(user_id, route_id);
+                        }
+                        catch (Exception e)
+                        {
+                            out.println("<error>Wrong parameters</error>");
+                        }
+                        break;
+                        
                 }
                 
                 out.println(xml);
@@ -193,7 +223,7 @@ public class Api extends HttpServlet {
         try {
             XStream xstream = new XStream();
             xstream.alias("category", Category.class);
-            xstream.alias("categorys", CategoryList.class);
+            xstream.alias("categories", CategoryList.class);
             xstream.addImplicitCollection(CategoryList.class, "categories");
 
             xml = xstream.toXML(categoryList);
@@ -208,15 +238,55 @@ public class Api extends HttpServlet {
     {
         String xml = "";
         
-        ToughnessList toughnessList = new ToughnessList(databaseManager.getToughness());
+        ToughnessList toughnessList = new ToughnessList(databaseManager.getToughnessList());
 
         try {
             XStream xstream = new XStream();
             xstream.alias("toughness", Toughness.class);
-            xstream.alias("toughnessList", ToughnessList.class);
-            xstream.addImplicitCollection(ToughnessList.class, "toughnessList");
+            xstream.alias("toughness_list", ToughnessList.class);
+            xstream.addImplicitCollection(ToughnessList.class, "toughness_list");
 
             xml = xstream.toXML(toughnessList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String getAnswerList(int question_id)
+    {
+        String xml = "";
+        
+        AnswerList answerList = new AnswerList(databaseManager.getAnswers(question_id));
+
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("answer", Answer.class);
+            xstream.alias("answers", AnswerList.class);
+            xstream.addImplicitCollection(AnswerList.class, "answers");
+
+            xml = xstream.toXML(answerList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String getPointsList(int user_id, int route_id)
+    {
+        String xml = "";
+        
+        PointsList answerList = new PointsList(databaseManager.getPoints(user_id, route_id));
+
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("points", Points.class);
+            xstream.alias("points_list", PointsList.class);
+            xstream.addImplicitCollection(PointsList.class, "points_list");
+
+            xml = xstream.toXML(answerList);
         } catch (Exception e) {
             e.printStackTrace();
         }
