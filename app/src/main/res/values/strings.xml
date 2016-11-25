@@ -1,4 +1,19 @@
 <resources>
     <string name="app_name">Orienteering</string>
     <string name="title_activity_maps">Map</string>
+    <string name="chose_username">Chose username</string>
+    <string name="start">Start</string>
+    <string name="create_game">Create Game</string>
+    <string name="open_world">Open World</string>
+    <string name="load_game">Load Game</string>
+    <string name="name">Name</string>
+    <string name="next">Continue</string>
+
+    <string-array name="subject_array">
+        <item>Math</item>
+        <item>Danish</item>
+        <item>History</item>
+        <item>Biology</item>
+        <item>Geography</item>
+    </string-array>
 </resources>

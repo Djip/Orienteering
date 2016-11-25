@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Vælg et Brugernavn"
+            android:text="@string/chose_username"
             android:textAlignment="center"
             android:layout_marginTop="20dp"
             android:textSize="24dp"
@@ -50,12 +50,12 @@
             android:layout_width="199dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="Start"
+            android:text="@string/start"
             android:textSize="26dp"
             android:layout_marginTop="20dp"
             android:layout_gravity="center"
             android:background="@drawable/rouded_button"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorWhite"
             android:id="@+id/start_btn"/>
     </LinearLayout>
 
