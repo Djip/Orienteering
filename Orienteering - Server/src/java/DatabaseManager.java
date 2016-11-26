@@ -96,13 +96,15 @@ public class DatabaseManager{
         return users;
     }
     
-    public ArrayList<PointOfInterest> getPointOfInterests()
+    public ArrayList<PointOfInterest> getPointOfInterests(int route_id)
     {
         ArrayList<PointOfInterest> point_of_interests = new ArrayList<PointOfInterest>();
 
         try
         {
             String sql = "SELECT * FROM point_of_interest";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
             ResultSet rs = stmt.executeQuery(sql);
 
             // Extract data from result set
@@ -111,7 +113,6 @@ public class DatabaseManager{
                 double latitude = rs.getDouble("latitude");
                 double longitude = rs.getDouble("longitude");
                 String title = rs.getString("title");
-                int route_id = rs.getInt("route_id");
 
                 point_of_interests.add(new PointOfInterest(id, latitude, longitude, title, route_id));
             }
