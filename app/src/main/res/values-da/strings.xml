@@ -9,7 +9,11 @@
     <string name="load_game">Indlæs spil</string>
     <string name="name">Navn</string>
     <string name="next">Fortsæt</string>
-
+    <string name="chose_subject">Vælg fag</string>
+    <string name="chose_level">Vælg niveau</string>
+    <string name="default_points">Benyt åben verden punkter?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
 
     <string-array name="subject_array">
         <item>Matematik</item>

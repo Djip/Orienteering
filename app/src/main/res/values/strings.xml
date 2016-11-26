@@ -8,6 +8,11 @@
     <string name="load_game">Load Game</string>
     <string name="name">Name</string>
     <string name="next">Continue</string>
+    <string name="chose_subject">Chose subject</string>
+    <string name="chose_level">Chose level</string>
+    <string name="default_points">Use openworld points?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <string-array name="subject_array">
         <item>Math</item>

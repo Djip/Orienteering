@@ -36,7 +36,7 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
         final LinearLayout open_world_layout = (LinearLayout)findViewById(R.id.open_world_game_layout);
         final LinearLayout load_game_layout = (LinearLayout)findViewById(R.id.load_game_layout);
 
-        RadioButton create_game = (RadioButton)findViewById(R.id.create_game_radio);
+        final RadioButton create_game = (RadioButton)findViewById(R.id.create_game_radio);
         create_game.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,8 +102,13 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MenuActivity.this, MapsActivity.class);
-                startActivity(intent);
+                if(create_game.isChecked()) {
+                    Intent intent = new Intent(MenuActivity.this, CreateGameActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(MenuActivity.this, MapsActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -122,8 +127,7 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (seekBar == seek_bar)
-        Toast.makeText(MenuActivity.this, "hej", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

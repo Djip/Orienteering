@@ -83,6 +83,7 @@
             android:orientation="vertical"
             android:id="@+id/open_world_game_layout"
             android:visibility="gone">
+
             <Spinner
                 android:id="@+id/subject_spinner"
                 android:layout_width="match_parent"
