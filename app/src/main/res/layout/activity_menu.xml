@@ -88,7 +88,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </Spinner>
+            <SeekBar
+                android:max="9"
+                android:progress="5"
+                android:progressDrawable="@color/colorWhite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seek_bar" />
+
+            <TextView
+                android:text="5"
+                android:textAlignment="center"
+                android:textSize="24dp"
+                android:textColor="@color/colorWhite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seek_bar_text" />
         </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"

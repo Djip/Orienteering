@@ -1,19 +1,27 @@
 package orienteering.orienteering;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.text.Line;
+import com.google.android.gms.vision.text.Text;
 
-public class MenuActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MenuActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, SeekBar.OnSeekBarChangeListener {
     ArrayAdapter<CharSequence> adapter;
+    SeekBar seek_bar;
+    TextView seek_bar_text;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +29,8 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
 
         adapter = ArrayAdapter.createFromResource(this,
                 R.array.subject_array, android.R.layout.simple_spinner_item);
+
+
 
         final LinearLayout create_game_layout = (LinearLayout)findViewById(R.id.create_game_layout);
         final LinearLayout open_world_layout = (LinearLayout)findViewById(R.id.open_world_game_layout);
@@ -48,6 +58,33 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
                 spinner.setOnItemSelectedListener(MenuActivity.this);
+
+                final SeekBar seek_bar = (SeekBar) findViewById(R.id.seek_bar);
+                final TextView seek_bar_text = (TextView) findViewById(R.id.seek_bar_text);
+                final SeekBar.OnSeekBarChangeListener custom_seeker = new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        try {
+                            //Toast.makeText(MenuActivity.this, seek_bar.getProgress()+"", Toast.LENGTH_SHORT).show();
+                            seek_bar_text.setText(seek_bar.getProgress()+1+"");
+                        } catch (Exception e) {
+                            Log.e("MYAPP", "exception", e);
+                        }
+                        }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                };
+
+                seek_bar.setOnSeekBarChangeListener(custom_seeker);
+
             }
         });
 
@@ -60,6 +97,16 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
                 load_game_layout.setVisibility(View.VISIBLE);
             }
         });
+
+        Button next = (Button)findViewById(R.id.get_game);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MenuActivity.this, MapsActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -69,6 +116,23 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (seekBar == seek_bar)
+        Toast.makeText(MenuActivity.this, "hej", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
 }
