@@ -21,4 +21,6 @@
         <item>Biology</item>
         <item>Geography</item>
     </string-array>
+
+    <string name="http_url">http://85.233.225.116:8080/Orienteering/Api?</string>
 </resources>

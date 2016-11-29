@@ -6,10 +6,16 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+import com.thoughtworks.xstream.XStream;
+
+import orienteering.orienteering.Models.User;
+import orienteering.orienteering.Models.UserList;
+
+public class MainActivity extends AppCompatActivity implements DeserializeCallback{
     private static final int MY_PERMISSION_ACCESS_COARSE_LOCATION = 1;
 
     @Override
@@ -30,5 +36,27 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        HttpManager httpManager = new HttpManager(this);
+        httpManager.pulldata(this, new String[]{"get"}, new String[]{"userList"});
+    }
+
+
+    @Override
+    public void onSuccess(String response) {
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("user", User.class);
+            xstream.alias("users", UserList.class);
+            xstream.addImplicitCollection(UserList.class, "users");
+            UserList userList = (UserList)xstream.fromXML(response);
+
+            for (User test : userList.getUsers())
+            {
+                Log.d("OKK", test.getUsername());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

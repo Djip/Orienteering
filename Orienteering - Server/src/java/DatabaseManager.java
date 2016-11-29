@@ -102,10 +102,10 @@ public class DatabaseManager{
 
         try
         {
-            String sql = "SELECT * FROM point_of_interest";
+            String sql = "SELECT * FROM point_of_interest AS poi JOIN route_point_of_interest_rel AS rpoi ON poi.id = rpoi.point_of_interest_id AND rpoi.route_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            
-            ResultSet rs = stmt.executeQuery(sql);
+            pstmt.setInt(1, route_id);
+            ResultSet rs = pstmt.executeQuery();
 
             // Extract data from result set
             while(rs.next()){

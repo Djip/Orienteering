@@ -46,7 +46,16 @@ public class Api extends HttpServlet {
                         break;
                         
                     case "pointOfInterestList":
-                        xml = getPointOfInterestList();
+                        String route_id_parameter_1 = request.getParameter("route_id");
+                        try
+                        {
+                            int route_id = Integer.parseInt(route_id_parameter_1);
+                            xml = getPointOfInterestList(route_id);
+                        }
+                        catch (Exception e)
+                        {
+                            out.println("<error>Wrong question_id</error>");
+                        }
                         break;
                         
                     case "routeList":
@@ -80,11 +89,11 @@ public class Api extends HttpServlet {
                         
                     case "pointsList":
                         String user_id_parameter = request.getParameter("user_id");
-                        String route_id_parameter = request.getParameter("route_id");
+                        String route_id_parameter_2 = request.getParameter("route_id");
                         try
                         {
                             int user_id = Integer.parseInt(user_id_parameter);
-                            int route_id = Integer.parseInt(route_id_parameter);
+                            int route_id = Integer.parseInt(route_id_parameter_2);
                             
                             xml = getPointsList(user_id, route_id);
                         }
@@ -154,11 +163,11 @@ public class Api extends HttpServlet {
         return xml;
     }
     
-    private String getPointOfInterestList()
+    private String getPointOfInterestList(int route_id)
     {
         String xml = "";
         
-        PointOfInterestList pointOfInterestList = new PointOfInterestList(databaseManager.getPointOfInterests());
+        PointOfInterestList pointOfInterestList = new PointOfInterestList(databaseManager.getPointOfInterests(route_id));
 
         try {
             XStream xstream = new XStream();
