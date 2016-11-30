@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,6 +19,8 @@ import android.util.Log;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -90,9 +93,9 @@ public class GpsLocation implements LocationListener{
 
         if(!points_created){
             points_created = true;
-            PlaceHandler place_handler = new PlaceHandler(mapsActivity);
-            place_handler.getDefaultPoints(googleMap, lat, lon);
-            place_handler.getRoutePoints(googleMap, 1);
+            PlaceHandler place_handler = new PlaceHandler(mapsActivity, lat, lon, googleMap);
+            place_handler.getRoutePoints(1);
+            place_handler.execute();
         }
 
         // Add a marker in Sydney and move the camera
