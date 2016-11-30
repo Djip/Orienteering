@@ -54,7 +54,7 @@ public class HttpManager{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.e("OKK", error.getMessage());
             }
         });
 

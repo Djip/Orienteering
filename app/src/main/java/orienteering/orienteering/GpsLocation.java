@@ -42,6 +42,7 @@ public class GpsLocation implements LocationListener{
     private int interval = 5000;
     private Handler handler;
     private boolean gpsUpdating;
+    private boolean points_created;
 
     public double lat = 0.0d;
     public double lon = 0.0d;
@@ -86,6 +87,13 @@ public class GpsLocation implements LocationListener{
         // TODO Auto-generated method stub
         lat = location.getLatitude();
         lon = location.getLongitude();
+
+        if(!points_created){
+            points_created = true;
+            PlaceHandler place_handler = new PlaceHandler(mapsActivity);
+            place_handler.getDefaultPoints(googleMap, lat, lon);
+            place_handler.getRoutePoints(googleMap, 1);
+        }
 
         // Add a marker in Sydney and move the camera
         LatLng latLng = new LatLng(lat, lon);
