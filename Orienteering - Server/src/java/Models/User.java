@@ -9,6 +9,9 @@
  * @author jespe
  */
 public class User {
+    public static final int OFFLNE = 0;
+    public static final int ONLINE = 1;
+    
     private int id;
     private String username;
     

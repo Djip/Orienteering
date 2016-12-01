@@ -41,11 +41,17 @@ public class Api extends HttpServlet {
                 String xml = "";
                 switch(apiRequest)
                 {
-                    case "userList":
-                        xml = getUserList();
+                    case "check_username":
+                        String check_username = request.getParameter("username");
+                        xml = checkUsername(check_username);
                         break;
                         
-                    case "pointOfInterestList":
+                    case "new_user":
+                        String new_user = request.getParameter("username");
+                        xml = newUser(new_user);
+                        break;
+                        
+                    case "point_of_interest_list":
                         String route_id_parameter_1 = request.getParameter("route_id");
                         try
                         {
@@ -58,23 +64,23 @@ public class Api extends HttpServlet {
                         }
                         break;
                         
-                    case "routeList":
+                    case "route_list":
                         xml = getRouteList();
                         break;
                         
-                    case "questionList":
+                    case "question_list":
                         xml = getQuestionList();
                         break;
                         
-                    case "categoryList":
+                    case "category_list":
                         xml = getCategoryList();
                         break;
                         
-                    case "toughnessList":
+                    case "toughness_list":
                         xml = getToughnessList();
                         break;
                         
-                    case "answerList":
+                    case "answer_list":
                         String question_id_parameter = request.getParameter("question_id");
                         try
                         {
@@ -87,7 +93,7 @@ public class Api extends HttpServlet {
                         }
                         break;
                         
-                    case "pointsList":
+                    case "points_list":
                         String user_id_parameter = request.getParameter("user_id");
                         String route_id_parameter_2 = request.getParameter("route_id");
                         try
@@ -156,6 +162,46 @@ public class Api extends HttpServlet {
             xstream.addImplicitCollection(UserList.class, "users");
 
             xml = xstream.toXML(userList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String checkUsername(String username)
+    {
+        String xml = "";
+        
+        UserList userExists = new UserList(databaseManager.checkUsername(username, true));
+
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("user", User.class);
+            xstream.alias("users", UserList.class);
+            xstream.addImplicitCollection(UserList.class, "users");
+
+            xml = xstream.toXML(userExists);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String newUser(String username)
+    {
+        String xml = "";
+        
+        UserList userExists = new UserList(databaseManager.newUser(username));
+
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("user", User.class);
+            xstream.alias("users", UserList.class);
+            xstream.addImplicitCollection(UserList.class, "users");
+
+            xml = xstream.toXML(userExists);
         } catch (Exception e) {
             e.printStackTrace();
         }
