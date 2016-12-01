@@ -18,7 +18,6 @@
         android:orientation="vertical"
         android:layout_centerHorizontal="true"
         android:weightSum="1">
-
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="219dp"
@@ -35,8 +34,7 @@
             android:textAlignment="center"
             android:layout_marginTop="20dp"
             android:textSize="24dp"
-            android:textColor="@color/colorWhite"
-            />
+            android:textColor="@color/colorWhite" />
 
         <EditText
             android:layout_width="match_parent"
@@ -44,7 +42,7 @@
             android:textAlignment="center"
             android:layout_marginTop="20dp"
             android:textColor="@color/colorWhite"
-            />
+            android:id="@+id/username" />
 
         <Button
             android:layout_width="199dp"
@@ -56,7 +54,7 @@
             android:layout_gravity="center"
             android:background="@drawable/rouded_button"
             android:textColor="@color/colorWhite"
-            android:id="@+id/start_btn"/>
+            android:id="@+id/start_btn" />
     </LinearLayout>
 
 </RelativeLayout>

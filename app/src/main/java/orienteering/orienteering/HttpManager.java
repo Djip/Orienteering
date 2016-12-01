@@ -24,6 +24,7 @@ public class HttpManager{
     {
         this.requestActivity = activity;
         this.requestQueue = Volley.newRequestQueue(requestActivity);
+        requestQueue.start();
     }
 
     public void pulldata(final DeserializeCallback deserializeCallback, String[] parameters, String[] values)
@@ -54,11 +55,11 @@ public class HttpManager{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.e("OKK", "pulldata error");
                 Log.e("OKK", error.getMessage());
             }
         });
 
         requestQueue.add(stringRequest);
-        requestQueue.start();
     }
 }

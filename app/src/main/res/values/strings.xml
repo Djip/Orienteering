@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Orienteering</string>
+    <string name="preference_name">Orienteering</string>
+
     <string name="title_activity_maps">Map</string>
     <string name="chose_username">Chose username</string>
     <string name="start">Start</string>
