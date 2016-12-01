@@ -1,4 +1,5 @@
 // Loading required libraries
+import com.sun.jmx.snmp.daemon.CommunicatorServer;
 import java.util.*;
 import java.sql.*;
 
@@ -91,6 +92,77 @@ public class DatabaseManager{
         finally
         {
             closeDatabaseConnection();
+        }
+      
+        return users;
+    }
+    
+    public ArrayList<User> checkUsername(String username, boolean close_connection)
+    {
+        ArrayList<User> users = new ArrayList<User>();
+        
+        try
+        {
+            String sql = "SELECT * FROM user WHERE username = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                int id  = rs.getInt("id");
+                String pulled_username = rs.getString("username");
+
+                users.add(new User(id, pulled_username));
+            }
+            
+            rs.close();
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }
+        finally
+        {
+            if (close_connection)
+            {
+                closeDatabaseConnection();
+            }
+        }
+      
+        return users;
+    }
+    
+    public ArrayList<User> newUser(String username)
+    {
+        ArrayList<User> users = new ArrayList<User>();
+        
+        ArrayList<User> check_users = checkUsername(username, false);
+        
+        if (check_users != null && check_users.size() != 1 && !username.matches(""))
+        {
+            try
+            {
+                String sql = "INSERT INTO user(username, online) VALUES(?, ?)";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, username);
+                pstmt.setInt(2, User.ONLINE);
+                int rows = pstmt.executeUpdate();
+
+                if (rows == 1)
+                {
+                    users = checkUsername(username, true);
+                }
+            }
+            catch(Exception e)
+            {
+                //Handle errors for Class.forName
+                e.printStackTrace();
+            }
+            finally
+            {
+                closeDatabaseConnection();
+            }
         }
       
         return users;

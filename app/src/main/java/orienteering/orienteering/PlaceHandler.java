@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.android.volley.RequestQueue;
 import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -35,9 +36,10 @@ import orienteering.orienteering.Models.User;
 import orienteering.orienteering.Models.UserList;
 
 public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList> {
-    Activity maps_activity;
-    GoogleMap map;
-    double lat, lon;
+    private Activity maps_activity;
+    private GoogleMap map;
+    private double lat;
+    private double lon;
 
     public PlaceHandler(Activity maps_activity, double lat, double lon, GoogleMap map){
         this.maps_activity = maps_activity;
@@ -81,11 +83,15 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
                 InputStreamReader input_stream_reader = new InputStreamReader(urlConnection.getInputStream());
                 BufferedReader bufferedReader = new BufferedReader(input_stream_reader);
                 StringBuilder stringBuilder = new StringBuilder();
+
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     stringBuilder.append(line).append("\n");
                 }
+
+                input_stream_reader.close();
                 bufferedReader.close();
+
                 final String xml_string = stringBuilder.toString();
 
                 InputStream stream = new ByteArrayInputStream(xml_string.getBytes(StandardCharsets.UTF_8));
@@ -93,15 +99,13 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
                 XmlPullParser parser = xmlFactoryObject.newPullParser();
                 parser.setInput(stream, null);
 
-                String latitude = "";
                 double lat = 0;
-                String longitude = "";
                 double lon = 0;
                 String label = "";
 
                 int event = parser.getEventType();
                 while (event != XmlPullParser.END_DOCUMENT)  {
-                    String name=parser.getName();
+                    String name = parser.getName();
 
                     switch (event){
                         case XmlPullParser.START_TAG:
@@ -110,11 +114,11 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
                                     label = parser.nextText();
                                 break;
                                 case "lat":
-                                    latitude = parser.nextText();
+                                    String latitude = parser.nextText();
                                     lat = Double.parseDouble(latitude);
                                     break;
                                 case "lng":
-                                    longitude = parser.nextText();
+                                    String longitude = parser.nextText();
                                     lon = Double.parseDouble(longitude);
                                     break;
                             }
@@ -124,11 +128,6 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
                             if(name.equals("result")){
                                 MapsPointOfInterest m = new MapsPointOfInterest(lat, lon, label);
                                 list.add(m);
-                                label = "";
-                                latitude = "";
-                                lat = 0;
-                                longitude = "";
-                                lon = 0;
                             }
                             break;
                     }
