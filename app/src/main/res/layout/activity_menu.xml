@@ -119,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textShortMessage"
-                android:hint="@string/name"
+                android:hint="@string/code"
                 android:textColorHint="@color/colorWhite"
                 android:textAlignment="center"
                 android:textColor="@color/colorWhite"

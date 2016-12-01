@@ -132,24 +132,27 @@ public class DatabaseManager{
         return point_of_interests;
     }
     
-    public ArrayList<Route> getRoutes()
+    public ArrayList<Route> getRouteFromCode(String code)
     {
-        ArrayList<Route> routes = new ArrayList<Route>();
+        ArrayList<Route> route_list = new ArrayList<Route>();
 
         try
         {
-            String sql = "SELECT * FROM route";
-            ResultSet rs = stmt.executeQuery(sql);
-
+            String sql = "SELECT * FROM route WHERE code = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, code);
+            ResultSet rs = pstmt.executeQuery();
+            
             // Extract data from result set
             while(rs.next()){
                 int id  = rs.getInt("id");
-                String code = rs.getString("code");
                 int user_id = rs.getInt("user_id");
+                int category_id = rs.getInt("category_id");
+                int toughness_id = rs.getInt("toughness_id");
                 int gametime = rs.getInt("gametime");
-                boolean show_default_point_of_interest = rs.getBoolean("show_deafult_point_of_interest");
+                boolean show_default_point_of_interest = rs.getBoolean("show_default_point_of_interest");
 
-                routes.add(new Route(id, code, user_id, gametime, show_default_point_of_interest));
+                route_list.add(new Route(id, code, user_id, category_id, toughness_id, gametime, show_default_point_of_interest));
             }
             
             rs.close();
@@ -164,7 +167,7 @@ public class DatabaseManager{
             closeDatabaseConnection();
         }
       
-        return routes;
+        return route_list;
     }
     
     public ArrayList<Question> getQuestions()

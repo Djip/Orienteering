@@ -13,6 +13,9 @@
     <string name="default_points">Use openworld points?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="code">Gamecode</string>
+
+
 
     <string-array name="subject_array">
         <item>Math</item>
@@ -23,4 +26,5 @@
     </string-array>
 
     <string name="http_url">http://85.233.225.116:8080/Orienteering/Api?</string>
+
 </resources>

@@ -1,6 +1,7 @@
 package orienteering.orienteering;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +21,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private GpsLocation gpsLocation;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        intent = getIntent();
         gpsLocation = new GpsLocation(this, googleMap);
+        gpsLocation.setRouteId(intent.getIntExtra("route_id", 0));
+        gpsLocation.setShowDefaultPointOfInterest(intent.getBooleanExtra("show_default_point_of_interest", false));
+        gpsLocation.start();
     }
 }

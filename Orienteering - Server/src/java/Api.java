@@ -58,8 +58,9 @@ public class Api extends HttpServlet {
                         }
                         break;
                         
-                    case "routeList":
-                        xml = getRouteList();
+                    case "route":
+                        String code = request.getParameter("route_code");
+                        xml = getRouteFromCode(code);
                         break;
                         
                     case "questionList":
@@ -183,11 +184,11 @@ public class Api extends HttpServlet {
         return xml;
     }
     
-    private String getRouteList()
+    private String getRouteFromCode(String code)
     {
         String xml = "";
         
-        RouteList routeList = new RouteList(databaseManager.getRoutes());
+        RouteList route = new RouteList(databaseManager.getRouteFromCode(code));
 
         try {
             XStream xstream = new XStream();
@@ -195,7 +196,7 @@ public class Api extends HttpServlet {
             xstream.alias("routes", RouteList.class);
             xstream.addImplicitCollection(RouteList.class, "routes");
 
-            xml = xstream.toXML(routeList);
+            xml = xstream.toXML(route);
         } catch (Exception e) {
             e.printStackTrace();
         }

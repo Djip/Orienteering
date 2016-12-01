@@ -15,8 +15,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.vision.text.Line;
 import com.google.android.gms.vision.text.Text;
+import com.thoughtworks.xstream.XStream;
+
+import orienteering.orienteering.Models.PointOfInterest;
+import orienteering.orienteering.Models.PointOfInterestList;
+import orienteering.orienteering.Models.Route;
+import orienteering.orienteering.Models.RouteList;
 
 public class MenuActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, SeekBar.OnSeekBarChangeListener {
     ArrayAdapter<CharSequence> adapter;
@@ -88,7 +96,7 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        RadioButton get_game = (RadioButton)findViewById(R.id.get_game_radio);
+        final RadioButton get_game = (RadioButton)findViewById(R.id.get_game_radio);
         get_game.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,6 +113,27 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
                 if(create_game.isChecked()) {
                     Intent intent = new Intent(MenuActivity.this, CreateGameActivity.class);
                     startActivity(intent);
+                } else if(get_game.isChecked()){
+                    TextView load_game_edit_text = (TextView)findViewById(R.id.load_game_edit_text);
+                    String game_code = load_game_edit_text.getText().toString();
+                    HttpManager httpManager = new HttpManager(MenuActivity.this);
+                    httpManager.pulldata(new DeserializeCallback() {
+                        @Override
+                        public void onSuccess(String response) {
+                            XStream xstream = new XStream();
+                            xstream.alias("route", Route.class);
+                            xstream.alias("routes", RouteList.class);
+                            xstream.addImplicitCollection(RouteList.class, "routes");
+                            RouteList routes = (RouteList)xstream.fromXML(response);
+                            if(routes.getRoutes() != null && routes.getRoutes().size() == 1){
+                                Intent intent = new Intent(MenuActivity.this, MapsActivity.class);
+                                intent.putExtra("route_id", routes.getRoutes().get(0).getId());
+                                intent.putExtra("show_default_point_of_interest", routes.getRoutes().get(0).getShowDefaultPointOfInterest());
+                                startActivity(intent);
+                            }
+                        }
+                        }, new String[]{"get", "route_code"}, new String[]{"route", String.valueOf(game_code)});
+
                 } else {
                     Intent intent = new Intent(MenuActivity.this, MapsActivity.class);
                     startActivity(intent);

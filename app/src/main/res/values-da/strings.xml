@@ -14,6 +14,7 @@
     <string name="default_points">Benyt åben verden punkter?</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
+    <string name="code">Spilkode</string>
 
     <string-array name="subject_array">
         <item>Matematik</item>

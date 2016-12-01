@@ -50,10 +50,24 @@ public class GpsLocation implements LocationListener{
     public double lat = 0.0d;
     public double lon = 0.0d;
 
+    private boolean show_default_point_of_interest;
+    private int route_id = 0;
+
+    public void setRouteId(int route_id){
+        this.route_id = route_id;
+    }
+
+    public void setShowDefaultPointOfInterest(boolean show_default_point_of_interest){
+        this.show_default_point_of_interest = show_default_point_of_interest;
+    }
+
     public GpsLocation(Activity mapsActivity, GoogleMap googleMap) {
         gpsLocation = this;
         this.mapsActivity = mapsActivity;
         this.googleMap = googleMap;
+    }
+
+    public void start(){
         locationManager = (LocationManager)mapsActivity.getSystemService(Context.LOCATION_SERVICE);
 
         handler = new Handler();
@@ -94,8 +108,13 @@ public class GpsLocation implements LocationListener{
         if(!points_created){
             points_created = true;
             PlaceHandler place_handler = new PlaceHandler(mapsActivity, lat, lon, googleMap);
-            place_handler.getRoutePoints(1);
-            place_handler.execute();
+            Log.e("OKK", String.valueOf(this.route_id));
+            if(this.route_id > 0){
+                place_handler.getRoutePoints(this.route_id);
+            }
+            if(this.show_default_point_of_interest){
+                place_handler.execute();
+            }
         }
 
         // Add a marker in Sydney and move the camera
