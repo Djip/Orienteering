@@ -11,7 +11,7 @@ package orienteering.orienteering.Models;/*
 public class Category {
     private int id;
     private String category;
-    
+
     public Category(int id, String category)
     {
         setId(id);

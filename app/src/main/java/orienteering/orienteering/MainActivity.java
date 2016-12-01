@@ -62,14 +62,17 @@ public class MainActivity extends AppCompatActivity{
                         public void onSuccess(String response) {
                             try {
                                 XStream xstream = new XStream();
+                                Log.d("OKK", "Wat1");
                                 xstream.alias("user", User.class);
                                 xstream.alias("users", UserList.class);
                                 xstream.addImplicitCollection(UserList.class, "users");
                                 UserList userList = (UserList)xstream.fromXML(response);
+                                Log.d("OKK", "Wat");
 
-                                if (userList.getUsers() != null && userList.getUsers().size() == 1){
+                                if (userList != null && userList.getUsers() != null && userList.getUsers().size() == 1){
                                     Toast.makeText(activity, "This username is taken", Toast.LENGTH_LONG).show();
                                 } else {
+                                    Log.d("OKK", "Wat3");
                                     httpManager.pulldata(new DeserializeCallback() {
                                         @Override
                                         public void onSuccess(String response) {
@@ -93,13 +96,13 @@ public class MainActivity extends AppCompatActivity{
                                                     Toast.makeText(activity, "Something went wrong", Toast.LENGTH_LONG).show();
                                                 }
                                             } catch (Exception e) {
-                                                Log.e("OKK", e.getMessage());
+                                                Log.e("OKK - Insert user", e.getMessage());
                                             }
                                         }
                                     }, new String[]{"get", "username"}, new String[]{"new_user", username.getText().toString()});
                                 }
                             } catch (Exception e) {
-                                Log.e("OKK", e.getMessage());
+                                Log.e("OKK - Get user if exist", e.getMessage());
                             }
                         }
                     }, new String[]{"get", "username"}, new String[]{"check_username", username.getText().toString()});

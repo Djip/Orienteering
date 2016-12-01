@@ -12,7 +12,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class CreateGameActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+import com.thoughtworks.xstream.XStream;
+
+import java.util.ArrayList;
+
+import orienteering.orienteering.Models.Category;
+import orienteering.orienteering.Models.CategoryList;
+
+public class CreateGameActivity extends AppCompatActivity {
 
     ArrayAdapter<CharSequence> adapter;
     SeekBar seek_bar;
@@ -23,13 +30,17 @@ public class CreateGameActivity extends AppCompatActivity implements AdapterView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_game);
 
-        adapter = ArrayAdapter.createFromResource(this,
-                R.array.subject_array, android.R.layout.simple_spinner_item);
+        ArrayList<Category> categories = getCategories();
+        ArrayList<String> categoryStrings = new ArrayList<String>();
+        for (Category category : categories)
+        {
+            categoryStrings.add(category.getCategory());
+        }
 
         Spinner spinner = (Spinner) findViewById(R.id.subject_spinner_create);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(CreateGameActivity.this);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoryStrings);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerArrayAdapter);
 
         final SeekBar seek_bar = (SeekBar) findViewById(R.id.seek_bar_create);
         final TextView seek_bar_text = (TextView) findViewById(R.id.seek_bar_text_create);
@@ -57,13 +68,49 @@ public class CreateGameActivity extends AppCompatActivity implements AdapterView
         seek_bar.setOnSeekBarChangeListener(custom_seeker);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, parent.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
-    }
+    private ArrayList<Category> getCategories()
+    {
+        final ArrayList<Category> categories = new ArrayList<Category>();
+        boolean runPulldata = true;
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+        Log.d("OKK", String.valueOf(categories.size()));
 
+        while (categories.size() == 0)
+        {
+            Log.d("OKK", "Erh");
+            if (runPulldata)
+            {
+                runPulldata = false;
+
+                HttpManager httpManager = new HttpManager(this);
+                httpManager.pulldata(new DeserializeCallback() {
+                    @Override
+                    public void onSuccess(String response) {
+                        try {
+                            Log.d("OKK", "WAT");
+                            XStream xstream = new XStream();
+                            xstream.alias("category", Category.class);
+                            xstream.alias("categories", CategoryList.class);
+                            xstream.addImplicitCollection(CategoryList.class, "categories");
+                            CategoryList categoryList = (CategoryList) xstream.fromXML(response);
+
+                            for (Category category : categoryList.getCategories())
+                            {
+                                Log.d("OKK", category.getCategory());
+                                categories.add(category);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Log.e("OKK", e.getMessage());
+                        }
+                    }
+                }, new String[]{"get"}, new String[]{"categoryList"});
+            }
+        }
+
+        Log.d("OKK", "Return" + String.valueOf(categories.size()));
+
+        return categories;
     }
 }

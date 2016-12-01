@@ -11,7 +11,7 @@
     <string name="next">Fortsæt</string>
     <string name="chose_subject">Vælg fag</string>
     <string name="chose_level">Vælg niveau</string>
-    <string name="default_points">Benyt åben verden punkter?</string>
+    <string name="default_points">Inkluder også standard punkter?</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
     <string name="code">Spilkode</string>

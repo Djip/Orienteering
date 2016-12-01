@@ -45,6 +45,8 @@ public class HttpManager{
             }
         }
 
+        Log.d("OKK", url);
+
         String xml;
         stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
