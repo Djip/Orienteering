@@ -40,6 +40,7 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
     private GoogleMap map;
     private double lat;
     private double lon;
+    private ArrayList<LatLng> lat_lng_list = new ArrayList<LatLng>();
 
     public PlaceHandler(Activity maps_activity, double lat, double lon, GoogleMap map){
         this.maps_activity = maps_activity;
@@ -63,6 +64,7 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
                     {
                         LatLng lat_lng = new LatLng(point.getLatitude(), point.getLongitude());
                         map.addMarker(new MarkerOptions().position(lat_lng).title(point.getTitle()));
+                        lat_lng_list.add(lat_lng);
                     }
                 } catch (Exception e) {
                     Log.e("OKK", e.getMessage());
@@ -126,8 +128,9 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
 
                         case XmlPullParser.END_TAG:
                             if(name.equals("result")){
-                                MapsPointOfInterest m = new MapsPointOfInterest(lat, lon, label);
-                                list.add(m);
+                                list.add(new MapsPointOfInterest(lat, lon, label));
+                                this.lat_lng_list.add(new LatLng(lat, lon));
+
                             }
                             break;
                     }
@@ -156,5 +159,9 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
             LatLng lat_lng = new LatLng(point.getLatitude(), point.getLongitude());
             map.addMarker(new MarkerOptions().position(lat_lng).title(point.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         }
+    }
+
+    public ArrayList<LatLng> getLatLngList(){
+        return this.lat_lng_list;
     }
 }

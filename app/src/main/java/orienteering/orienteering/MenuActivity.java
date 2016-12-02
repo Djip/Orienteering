@@ -115,6 +115,7 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
                     startActivity(intent);
                 } else if(get_game.isChecked()){
                     TextView load_game_edit_text = (TextView)findViewById(R.id.load_game_edit_text);
+                    final Intent intent = new Intent(MenuActivity.this, MapsActivity.class);
                     String game_code = load_game_edit_text.getText().toString();
                     HttpManager httpManager = new HttpManager(MenuActivity.this);
                     httpManager.pulldata(new DeserializeCallback() {
@@ -126,7 +127,6 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
                             xstream.addImplicitCollection(RouteList.class, "routes");
                             RouteList routes = (RouteList)xstream.fromXML(response);
                             if(routes.getRoutes() != null && routes.getRoutes().size() == 1){
-                                Intent intent = new Intent(MenuActivity.this, MapsActivity.class);
                                 intent.putExtra("route_id", routes.getRoutes().get(0).getId());
                                 intent.putExtra("show_default_point_of_interest", routes.getRoutes().get(0).getShowDefaultPointOfInterest());
                                 startActivity(intent);
@@ -136,6 +136,7 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 } else {
                     Intent intent = new Intent(MenuActivity.this, MapsActivity.class);
+                    intent.putExtra("show_default_point_of_interest", true);
                     startActivity(intent);
                 }
             }

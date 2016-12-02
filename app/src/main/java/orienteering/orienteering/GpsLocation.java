@@ -53,6 +53,9 @@ public class GpsLocation implements LocationListener{
     private boolean show_default_point_of_interest;
     private int route_id = 0;
 
+    private ArrayList<LatLng> points_lat_lng_list;
+    private ArrayList<LatLng> points_within_reach;
+
     public void setRouteId(int route_id){
         this.route_id = route_id;
     }
@@ -115,6 +118,7 @@ public class GpsLocation implements LocationListener{
             if(this.show_default_point_of_interest){
                 place_handler.execute();
             }
+            points_lat_lng_list = place_handler.getLatLngList();
         }
 
         // Add a marker in Sydney and move the camera
@@ -125,6 +129,15 @@ public class GpsLocation implements LocationListener{
             
         } else {
             userMarker.setPosition(latLng);
+            if (!points_lat_lng_list.isEmpty() && points_lat_lng_list != null){
+                float[] distance = new float[1];
+                for(LatLng lat_lon : points_lat_lng_list){
+                    Location.distanceBetween(lat, lon, lat_lon.latitude, lat_lon.longitude, distance);
+                    if (distance[0] < 30){
+                        this.points_within_reach.add(lat_lon);
+                    }
+                }
+            }
         }
 
         Log.d("Geo_Location", "Latitude: " + lat + ", Longitude: " + lon);
