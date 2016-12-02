@@ -1,23 +1,21 @@
 <resources>
     <string name="app_name">Orienteering</string>
-    <string name="preference_name">Orienteering</string>
+    <string name="preference_name" translatable="false">Orienteering</string>
 
     <string name="title_activity_maps">Map</string>
-    <string name="chose_username">Chose username</string>
+    <string name="choose_username">Choose username</string>
     <string name="start">Start</string>
     <string name="create_game">Create Game</string>
     <string name="open_world">Open World</string>
     <string name="load_game">Load Game</string>
     <string name="name">Name</string>
     <string name="next">Continue</string>
-    <string name="chose_subject">Chose subject</string>
-    <string name="chose_level">Chose level</string>
+    <string name="choose_subject">Choose subject</string>
+    <string name="choose_level">Choose level</string>
     <string name="default_points">Include default points too?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="code">Gamecode</string>
-
-
 
     <string-array name="subject_array">
         <item>Math</item>
@@ -27,6 +25,6 @@
         <item>Geography</item>
     </string-array>
 
-    <string name="http_url">http://85.233.225.116:8080/Orienteering/Api?</string>
+    <string name="http_url" translatable="false">http://85.233.225.116:8080/Orienteering/Api?</string>
 
 </resources>

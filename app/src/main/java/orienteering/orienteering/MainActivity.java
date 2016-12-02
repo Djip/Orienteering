@@ -62,17 +62,14 @@ public class MainActivity extends AppCompatActivity{
                         public void onSuccess(String response) {
                             try {
                                 XStream xstream = new XStream();
-                                Log.d("OKK", "Wat1");
                                 xstream.alias("user", User.class);
                                 xstream.alias("users", UserList.class);
                                 xstream.addImplicitCollection(UserList.class, "users");
                                 UserList userList = (UserList)xstream.fromXML(response);
-                                Log.d("OKK", "Wat");
 
                                 if (userList != null && userList.getUsers() != null && userList.getUsers().size() == 1){
                                     Toast.makeText(activity, "This username is taken", Toast.LENGTH_LONG).show();
                                 } else {
-                                    Log.d("OKK", "Wat3");
                                     httpManager.pulldata(new DeserializeCallback() {
                                         @Override
                                         public void onSuccess(String response) {

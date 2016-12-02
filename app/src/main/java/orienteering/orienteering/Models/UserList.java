@@ -14,7 +14,7 @@ import java.util.List;
  * @author jespe
  */
 public class UserList {
-    private List<User> users = null;
+    private List<User> users;
     
     public UserList()
     {

@@ -2,15 +2,12 @@
 <resources>
     <string name="app_name">Orienteringsløb</string>
     <string name="title_activity_maps">Kort</string>
-    <string name="chose_username">Vælg et brugernavn</string>
     <string name="start">Start</string>
     <string name="create_game">Opret spil</string>
     <string name="open_world">Åben verden</string>
     <string name="load_game">Indlæs spil</string>
     <string name="name">Navn</string>
     <string name="next">Fortsæt</string>
-    <string name="chose_subject">Vælg fag</string>
-    <string name="chose_level">Vælg niveau</string>
     <string name="default_points">Inkluder også standard punkter?</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
@@ -23,4 +20,8 @@
         <item>Biologi</item>
         <item>Geografi</item>
     </string-array>
+
+    <string name="choose_username">Vælg et brugernavn</string>
+    <string name="choose_level">Vælg niveau</string>
+    <string name="choose_subject">Vælg fag</string>
 </resources>

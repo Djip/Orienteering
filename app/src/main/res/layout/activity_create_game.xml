@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <TextView
-        android:text="@string/chose_subject"
+        android:text="@string/choose_subject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
@@ -29,7 +29,7 @@
     </Spinner>
 
         <TextView
-            android:text="@string/chose_level"
+            android:text="@string/choose_level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
@@ -70,14 +70,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/default_points_yes"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textColor="@color/colorWhite"
+                android:buttonTint="@color/colorPrimary" />
 
             <RadioButton
                 android:text="@string/no"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/default_points_no"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textColor="@color/colorWhite"
+                android:buttonTint="@color/colorPrimary" />
         </RadioGroup>
     </LinearLayout>
 </RelativeLayout>
