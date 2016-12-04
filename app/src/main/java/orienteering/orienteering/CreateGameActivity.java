@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 import orienteering.orienteering.Models.Category;
 import orienteering.orienteering.Models.CategoryList;
+import orienteering.orienteering.Models.Toughness;
+import orienteering.orienteering.Models.ToughnessList;
 
 public class CreateGameActivity extends AppCompatActivity {
 
@@ -33,40 +35,19 @@ public class CreateGameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_game);
 
         getCategories();
-
-        final SeekBar seek_bar = (SeekBar) findViewById(R.id.seek_bar_create);
-        final TextView seek_bar_text = (TextView) findViewById(R.id.seek_bar_text_create);
-        final SeekBar.OnSeekBarChangeListener custom_seeker = new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                try {
-                    seek_bar_text.setText(seek_bar.getProgress()+1+"");
-                } catch (Exception e) {
-                    Log.e("MYAPP", "exception", e);
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        };
-
-        seek_bar.setOnSeekBarChangeListener(custom_seeker);
+        getToughness();
     }
 
     private void getCategories()
     {
-        final ArrayList<Category> categories = new ArrayList<Category>();
-
         HttpManager httpManager = new HttpManager(this);
         httpManager.pulldata(categoryCallback, new String[]{"get"}, new String[]{"category_list"});
-        //return categories;
+    }
+
+    private void getToughness()
+    {
+        HttpManager httpManager = new HttpManager(this);
+        httpManager.pulldata(toughnessCallback, new String[]{"get"}, new String[]{"toughness_list"});
     }
 
     private DeserializeCallback categoryCallback = new DeserializeCallback() {
@@ -77,16 +58,16 @@ public class CreateGameActivity extends AppCompatActivity {
                 xstream.alias("category", Category.class);
                 xstream.alias("categories", CategoryList.class);
                 xstream.addImplicitCollection(CategoryList.class, "categories");
-                CategoryList categoryList = (CategoryList) xstream.fromXML(response);
+                CategoryList category_list = (CategoryList) xstream.fromXML(response);
 
-                ArrayList<String> categoryStrings = new ArrayList<String>();
-                for (Category category : categoryList.getCategories())
+                ArrayList<String> category_strings = new ArrayList<String>();
+                for (Category category : category_list.getCategories())
                 {
-                    categoryStrings.add(category.getCategory());
+                    category_strings.add(category.getCategory());
                 }
 
                 Spinner spinner = (Spinner) findViewById(R.id.subject_spinner_create);
-                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(activity, R.layout.spinner_item, categoryStrings);
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(activity, R.layout.spinner_item, category_strings);
                 spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(spinnerArrayAdapter);
             }
@@ -100,7 +81,54 @@ public class CreateGameActivity extends AppCompatActivity {
     private DeserializeCallback toughnessCallback = new DeserializeCallback() {
         @Override
         public void onSuccess(String response) {
+            try {
+                XStream xstream = new XStream();
+                xstream.alias("toughness", Toughness.class);
+                xstream.alias("toughness_list", ToughnessList.class);
+                xstream.addImplicitCollection(ToughnessList.class, "toughness_list");
+                ToughnessList toughness_list = (ToughnessList) xstream.fromXML(response);
 
+                ArrayList<String> toughness_strings = new ArrayList<String>();
+                for (Toughness toughness : toughness_list.getToughnessList())
+                {
+                    toughness_strings.add(toughness.getToughness());
+                }
+
+                Spinner spinner = (Spinner) findViewById(R.id.toughness_spinner_create);
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(activity, R.layout.spinner_item, toughness_strings);
+                spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(spinnerArrayAdapter);
+            }
+            catch (Exception e)
+            {
+                Log.e("OKK", e.getMessage());
+            }
+            /*
+            final SeekBar seek_bar = (SeekBar) findViewById(R.id.seek_bar_create);
+            final TextView seek_bar_text = (TextView) findViewById(R.id.seek_bar_text_create);
+            SeekBar.OnSeekBarChangeListener custom_seeker = new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    try {
+                        seek_bar_text.setText(String.valueOf(seek_bar.getProgress() + 1));
+                    } catch (Exception e) {
+                        Log.e("OKK", e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            };
+
+            seek_bar.setOnSeekBarChangeListener(custom_seeker);
+            */
         }
     };
 }

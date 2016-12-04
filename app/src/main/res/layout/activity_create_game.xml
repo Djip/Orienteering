@@ -10,78 +10,153 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/backgroundColor"
     tools:context="orienteering.orienteering.CreateGameActivity">
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="@string/choose_subject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:textSize="24dp"
+                android:id="@+id/text_view_chose_subject" />
+            <Spinner
+                android:id="@+id/subject_spinner_create"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </Spinner>
+
+            <TextView
+                android:text="@string/choose_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:textSize="24dp"
+                android:id="@+id/text_view_chose_level" />
+            <Spinner
+                android:id="@+id/toughness_spinner_create"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </Spinner>
+
+            <!--
+            <SeekBar
+                android:progressDrawable="@color/colorWhite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seek_bar_create" />
+            <TextView
+                android:text="5"
+                android:textAlignment="center"
+                android:textSize="24dp"
+                android:textColor="@color/colorWhite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seek_bar_text_create" />
+            -->
+
+            <TextView
+                android:text="@string/default_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:textSize="24dp"
+                android:id="@+id/text_view_default_points" />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:text="@string/yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/default_points_yes"
+                    android:layout_weight="1"
+                    android:textColor="@color/colorWhite"
+                    android:buttonTint="@color/colorPrimary" />
+
+                <RadioButton
+                    android:text="@string/no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/default_points_no"
+                    android:layout_weight="1"
+                    android:textColor="@color/colorWhite"
+                    android:buttonTint="@color/colorPrimary" />
+            </RadioGroup>
+
+            <TextView
+                android:text="@string/show_defined_questions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:textSize="24dp" />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:text="@string/yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/show_defined_questions_yes"
+                    android:layout_weight="1"
+                    android:textColor="@color/colorWhite"
+                    android:buttonTint="@color/colorPrimary" />
+
+                <RadioButton
+                    android:text="@string/no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/show_defined_questions_no"
+                    android:layout_weight="1"
+                    android:textColor="@color/colorWhite"
+                    android:buttonTint="@color/colorPrimary" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <Button
+            android:layout_width="199dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/next"
+            android:textSize="26dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:background="@drawable/rouded_button"
+            android:textColor="#FFFFFF"
+            android:id="@+id/create_game"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <TextView
-        android:text="@string/choose_subject"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorWhite"
-        android:textSize="24dp"
-        android:id="@+id/text_view_chose_subject" />
-
-    <Spinner
-        android:id="@+id/subject_spinner_create"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </Spinner>
-
-        <TextView
-            android:text="@string/choose_level"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:textSize="24dp"
-            android:id="@+id/text_view_chose_level" />
-        <SeekBar
-            android:max="9"
-            android:progress="5"
-            android:progressDrawable="@color/colorWhite"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/seek_bar_create" />
-        <TextView
-            android:text="5"
-            android:textAlignment="center"
-            android:textSize="24dp"
-            android:textColor="@color/colorWhite"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/seek_bar_text_create" />
-
-        <TextView
-            android:text="@string/default_points"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:textSize="24dp"
-            android:id="@+id/text_view_default_points" />
-
-
-        <RadioGroup
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <RadioButton
-                android:text="@string/yes"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_questions"
+                android:textColor="@color/colorWhite"
+                android:textSize="24dp"
+                android:textAlignment="center"/>
+            <TextView
+                android:text="@string/question"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/default_points_yes"
-                android:layout_weight="1"
                 android:textColor="@color/colorWhite"
-                android:buttonTint="@color/colorPrimary" />
-
-            <RadioButton
-                android:text="@string/no"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/default_points_no"
-                android:layout_weight="1"
-                android:textColor="@color/colorWhite"
-                android:buttonTint="@color/colorPrimary" />
-        </RadioGroup>
-    </LinearLayout>
+                android:textSize="24dp" />
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

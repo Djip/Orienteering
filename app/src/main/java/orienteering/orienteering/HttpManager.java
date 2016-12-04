@@ -24,7 +24,7 @@ public class HttpManager{
     {
         this.requestActivity = activity;
         this.requestQueue = Volley.newRequestQueue(requestActivity);
-        //requestQueue.start();
+        requestQueue.start();
     }
 
     public void pulldata(final DeserializeCallback deserializeCallback, String[] parameters, String[] values)
@@ -64,6 +64,6 @@ public class HttpManager{
         });
 
         requestQueue.add(stringRequest);
-        requestQueue.start();
+        //requestQueue.start();
     }
 }

@@ -13,9 +13,13 @@
     <string name="choose_subject">Choose subject</string>
     <string name="choose_level">Choose level</string>
     <string name="default_points">Include default points too?</string>
+    <string name="show_defined_questions">Use already defined questions in the same category and level?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="code">Gamecode</string>
+    <string name="create_questions">Create Questions</string>
+    <string name="create">Create</string>
+    <string name="question">Question</string>
 
     <string-array name="subject_array">
         <item>Math</item>
