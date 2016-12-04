@@ -1,5 +1,6 @@
 package orienteering.orienteering;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -8,6 +9,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,9 +18,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.thoughtworks.xstream.XStream;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import orienteering.orienteering.Models.Category;
+import orienteering.orienteering.Models.PointOfInterest;
+import orienteering.orienteering.Models.PointOfInterestList;
+import orienteering.orienteering.Models.Question;
+import orienteering.orienteering.Models.QuestionList;
+import orienteering.orienteering.Models.Toughness;
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.InfoWindowAdapter {
 
     private GoogleMap mMap;
     private GpsLocation gpsLocation;
@@ -53,5 +65,60 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         gpsLocation.setRouteId(intent.getIntExtra("route_id", 0));
         gpsLocation.setShowDefaultPointOfInterest(intent.getBooleanExtra("show_default_point_of_interest", false));
         gpsLocation.start();
+        final Activity activity = this;
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if(marker.getTitle() == "This is you!"){
+                    // ingenting
+                } else {
+                    mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                        @Override
+                        public View getInfoWindow(Marker marker) {
+                            return null;
+                        }
+
+                        @Override
+                        public View getInfoContents(Marker marker) {
+                            View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
+                            LatLng lat_lng = marker.getPosition();
+                            final TextView question_popup = (TextView) v.findViewById(R.id.question_box);
+                            float[] distance = new float[1];
+                            Location.distanceBetween(gpsLocation.lat, gpsLocation.lon, lat_lng.latitude, lat_lng.longitude, distance);
+                            if(distance[0] > 2000){
+                                question_popup.setText("Du er: " + distance[0] + "m fra punktet - du skal tættere på!");
+                            } else {
+                                QuestionHandler question_handler = new QuestionHandler(activity, mMap);
+                                QuestionList question_list = question_handler.getQuestionList(new Toughness(1, "1st grade"), new Category(1, "math"));
+                                for (Question question : question_list.getQuestions()){
+                                    Log.e("OKK", "Test23");
+                                    Log.e("OKK", question.getQuestion());
+                                }
+                            }
+
+                            return v;
+                        }
+                    });
+
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        return null;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        return null;
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
     }
 }

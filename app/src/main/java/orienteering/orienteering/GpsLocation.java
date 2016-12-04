@@ -64,6 +64,10 @@ public class GpsLocation implements LocationListener{
         this.show_default_point_of_interest = show_default_point_of_interest;
     }
 
+    public Marker getUserMarker(){
+        return this.userMarker;
+    }
+
     public GpsLocation(Activity mapsActivity, GoogleMap googleMap) {
         gpsLocation = this;
         this.mapsActivity = mapsActivity;
