@@ -273,44 +273,67 @@
                 <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
+                    android:orientation="horizontal"
+                    android:id="@+id/correct_answer_grp">
                     <RadioButton
                         android:text="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/correct_answer_1"
                         android:layout_weight="1"
                         android:textColor="@color/colorWhite"
                         android:buttonTint="@color/colorPrimary" />
-
                     <RadioButton
                         android:text="2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/correct_answer_2"
                         android:layout_weight="1"
                         android:textColor="@color/colorWhite"
                         android:buttonTint="@color/colorPrimary" />
-
                     <RadioButton
                         android:text="3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/correct_answer_3"
                         android:layout_weight="1"
                         android:textColor="@color/colorWhite"
                         android:buttonTint="@color/colorPrimary" />
-
                     <RadioButton
                         android:text="4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/correct_answer_4"
                         android:layout_weight="1"
                         android:textColor="@color/colorWhite"
                         android:buttonTint="@color/colorPrimary" />
                 </RadioGroup>
+
+                <TextView
+                    android:text="@string/plus_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="24dp" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:textColorHint="@color/colorWhite"
+                    android:textColor="@color/colorWhite"
+                    android:ems="10"
+                    android:id="@+id/plus_points" />
+
+                <TextView
+                    android:text="@string/minus_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="24dp" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:textColorHint="@color/colorWhite"
+                    android:textColor="@color/colorWhite"
+                    android:ems="10"
+                    android:id="@+id/minus_points" />
 
                 <Button
                     android:layout_width="199dp"
@@ -324,7 +347,8 @@
                     android:textColor="#FFFFFF"
                     android:id="@+id/create_question"
                     android:layout_centerHorizontal="true"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_alignParentBottom="true"
+                    android:onClick="addQuestion"/>
 
                 <Button
                     android:layout_width="199dp"

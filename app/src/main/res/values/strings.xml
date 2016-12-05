@@ -27,6 +27,9 @@
     <string name="answer3">Answer 3</string>
     <string name="answer4">Answer 4</string>
     <string name="correct_answer">Correct Answer</string>
+    <string name="plus_point">Points for a correct answer</string>
+    <string name="minus_point">Missing points for a wrong answer</string>
+    <string name="add_question_error">Everything have to be filled, to create a question</string>
 
     <string-array name="subject_array">
         <item>Math</item>
