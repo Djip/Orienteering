@@ -505,9 +505,9 @@ public class DatabaseManager{
         return route;
     }
     
-    public ArrayList<Question> newQuestion(Question question)
+    public Question newQuestion(Question question)
     {
-        ArrayList<Question> questions = new ArrayList<Question>();
+        Question new_question = null;
         
         try
         {
@@ -524,7 +524,7 @@ public class DatabaseManager{
 
             if (rows == 1)
             {
-                questions.add(getLatestQuestion(question.getRouteId()));
+                new_question = getLatestQuestion(question.getRouteId());
             }
         }
         catch(Exception e)
@@ -537,7 +537,7 @@ public class DatabaseManager{
             closeDatabaseConnection();
         }
         
-        return questions;
+        return new_question;
     }
     
     public Question getLatestQuestion(int route_id)
@@ -575,5 +575,46 @@ public class DatabaseManager{
         }
       
         return question;
+    }
+    
+    public String newAnswers(List<Answer> answers)
+    {
+        String status = "error";
+        
+        try
+        {
+            for (Answer answer : answers)
+            {
+                String sql = "INSERT INTO answer(question_id, answer, correct) VALUES(?, ?, ?)";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, answer.getQuestionId());
+                pstmt.setString(2, answer.getAnswer());
+                pstmt.setBoolean(3, answer.getCorrect());
+
+                int rows = pstmt.executeUpdate();
+                
+                if (rows == 1)
+                {
+                    status = "success";
+                }
+                else
+                {
+                    status = "error";
+                    break;
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+            return "error";
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+        
+        return status;
     }
 }

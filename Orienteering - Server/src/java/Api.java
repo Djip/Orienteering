@@ -36,8 +36,6 @@ public class Api extends HttpServlet {
             
             if (apiRequest != "" && apiRequest != null)
             {
-                response.setContentType("text/xml;charset=UTF-8");
-                
                 String xml = "";
                 switch(apiRequest)
                 {
@@ -123,6 +121,20 @@ public class Api extends HttpServlet {
                         String question_xml = request.getParameter("question");
                         xml = newQuestion(question_xml);
                         break;
+                        
+                    case "create_answers":
+                        String answers_xml = request.getParameter("answers");
+                        xml = newAnswers(answers_xml);
+                        break;
+                }
+                
+                if (xml != "success" && xml != "error")
+                {
+                    response.setContentType("text/xml;charset=UTF-8");
+                }
+                else
+                {
+                    response.setContentType("text/html;charset=UTF-8");
                 }
                 
                 out.println(xml);
@@ -392,14 +404,32 @@ public class Api extends HttpServlet {
         try {
             XStream xstream = new XStream();
             xstream.alias("question", Question.class);
-            xstream.alias("questions", QuestionList.class);
-            xstream.addImplicitCollection(QuestionList.class, "questions");
 
-            QuestionList question_list = (QuestionList)xstream.fromXML(question_xml);
-            Question question = question_list.getQuestions().get(0);
+            Question question = (Question)xstream.fromXML(question_xml);
 
-            QuestionList new_question = new QuestionList(databaseManager.newQuestion(question));
+            Question new_question = databaseManager.newQuestion(question);
             xml = xstream.toXML(new_question);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String newAnswers(String answers_xml)
+    {
+        String xml = "";
+        
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("answer", Answer.class);
+            xstream.alias("answers", AnswerList.class);
+            xstream.addImplicitCollection(AnswerList.class, "answers");
+
+            AnswerList answer_list = (AnswerList)xstream.fromXML(answers_xml);
+
+            String status = databaseManager.newAnswers(answer_list.getAnswers());
+            xml = status;
         } catch (Exception e) {
             e.printStackTrace();
         }
