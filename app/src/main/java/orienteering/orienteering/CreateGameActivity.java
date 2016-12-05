@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import orienteering.orienteering.Models.Category;
 import orienteering.orienteering.Models.CategoryList;
+import orienteering.orienteering.Models.Question;
 import orienteering.orienteering.Models.Route;
 import orienteering.orienteering.Models.RouteList;
 import orienteering.orienteering.Models.Toughness;
@@ -120,6 +121,63 @@ public class CreateGameActivity extends AppCompatActivity {
         }
     }
 
+    public void addQuestion(View v)
+    {
+        EditText question_text = (EditText)findViewById(R.id.question_text);
+        EditText answer1_text = (EditText)findViewById(R.id.answer1_text);
+        EditText answer2_text = (EditText)findViewById(R.id.answer2_text);
+        EditText answer3_text = (EditText)findViewById(R.id.answer3_text);
+        EditText answer4_text = (EditText)findViewById(R.id.answer4_text);
+
+        int correct_answer_index;
+        RadioGroup correct_answer_grp = (RadioGroup)findViewById(R.id.correct_answer_grp);
+        if (correct_answer_grp.getCheckedRadioButtonId() != -1)
+        {
+            correct_answer_index = correct_answer_grp.indexOfChild(findViewById(correct_answer_grp.getCheckedRadioButtonId()));
+        }
+        else
+        {
+            correct_answer_index = -1;
+        }
+
+        EditText plus_points = (EditText)findViewById(R.id.plus_points);
+        EditText minus_points = (EditText)findViewById(R.id.minus_points);
+
+        if (question_text.getText().toString().equals("") ||
+            answer1_text.getText().toString().equals("") ||
+            answer2_text.getText().toString().equals("") ||
+            answer3_text.getText().toString().equals("") ||
+            answer4_text.getText().toString().equals("") ||
+            correct_answer_index == -1 ||
+            plus_points.getText().toString().equals("") ||
+            minus_points.getText().toString().equals(""))
+        {
+            Toast.makeText(this, getResources().getString(R.string.add_question_error), Toast.LENGTH_LONG);
+        }
+        else
+        {
+            Question question = new Question();
+            question.setCategoryId(route.getCategoryId());
+            question.setToughnessId(route.getToughnessId());
+            question.setQuestion(question_text.getText().toString());
+            question.setPlusPoint(Integer.valueOf(plus_points.getText().toString()));
+            question.setMinusPoint(Integer.valueOf(minus_points.getText().toString()));
+            question.setRouteId(route.getId());
+
+            try {
+                XStream xstream = new XStream();
+                xstream.alias("question", Question.class);
+                String question_xml = xstream.toXML(question);
+                question_xml = question_xml.replace("\n", "").replace("\r", "");
+
+                HttpManager httpManager = new HttpManager(activity);
+                httpManager.pulldata(createQuestionCallback, new String[]{"get", "question"}, new String[]{"create_question", question_xml});
+            } catch (Exception e) {
+                Log.e("OKK", e.getMessage());
+            }
+        }
+    }
+
     private DeserializeCallback categoryCallback = new DeserializeCallback() {
         @Override
         public void onSuccess(String response) {
@@ -190,6 +248,20 @@ public class CreateGameActivity extends AppCompatActivity {
 
                 create_route_wrapper.setVisibility(View.GONE);
                 question_wrapper.setVisibility(View.VISIBLE);
+            } catch (Exception e) {
+                Log.e("OKK", e.getMessage());
+            }
+        }
+    };
+
+    private DeserializeCallback createQuestionCallback = new DeserializeCallback() {
+        @Override
+        public void onSuccess(String response) {
+            try {
+                XStream xstream = new XStream();
+                xstream.alias("question", Question.class);
+
+                Question question = (Question)xstream.fromXML(response);
             } catch (Exception e) {
                 Log.e("OKK", e.getMessage());
             }
