@@ -438,14 +438,15 @@ public class DatabaseManager{
         
         try
         {
-            String sql = "INSERT INTO route(code, user_id, toughness_id, gametime, show_default_point_of_interest, show_defined_questions) VALUES(?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO route(code, user_id, category_id, toughness_id, gametime, show_default_point_of_interest, show_defined_questions) VALUES(?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, route.getCode());
             pstmt.setInt(2, route.getUserId());
-            pstmt.setInt(3, route.getToughnessId());
-            pstmt.setInt(4, route.getGametime());
-            pstmt.setBoolean(5, route.getShowDefaultPointOfInterest());
-            pstmt.setBoolean(6, route.getShowDefinedQuestions());
+            pstmt.setInt(3, route.getCategoryId());
+            pstmt.setInt(4, route.getToughnessId());
+            pstmt.setInt(5, route.getGametime());
+            pstmt.setBoolean(6, route.getShowDefaultPointOfInterest());
+            pstmt.setBoolean(7, route.getShowDefinedQuestions());
             
             int rows = pstmt.executeUpdate();
 
@@ -476,7 +477,7 @@ public class DatabaseManager{
             String sql = "SELECT * FROM route WHERE user_id = ? ORDER BY id DESC LIMIT 1";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, user_id);
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = pstmt.executeQuery();
 
             // Extract data from result set
             while(rs.next()){
@@ -548,7 +549,7 @@ public class DatabaseManager{
             String sql = "SELECT * FROM question WHERE route_id = ? ORDER BY id DESC LIMIT 1";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, route_id);
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = pstmt.executeQuery();
 
             // Extract data from result set
             while(rs.next()){

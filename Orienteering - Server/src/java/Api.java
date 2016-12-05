@@ -114,14 +114,14 @@ public class Api extends HttpServlet {
                         }
                         break;
                         
-                    case "create_question":
-                        String question_xml = request.getParameter("question");
-                        xml = newQuestion(question_xml);
-                        break;
-                        
                     case "create_route":
                         String route_xml = request.getParameter("route");
                         xml = newRoute(route_xml);
+                        break;
+                        
+                    case "create_question":
+                        String question_xml = request.getParameter("question");
+                        xml = newQuestion(question_xml);
                         break;
                 }
                 
@@ -375,7 +375,7 @@ public class Api extends HttpServlet {
 
             RouteList route_list = (RouteList)xstream.fromXML(route_xml);
             Route route = route_list.getRoutes().get(0);
-
+            
             RouteList new_route = new RouteList(databaseManager.newRoute(route));
             xml = xstream.toXML(new_route);
         } catch (Exception e) {
