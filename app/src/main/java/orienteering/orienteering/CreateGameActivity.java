@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,15 +26,17 @@ import orienteering.orienteering.Models.ToughnessList;
 
 public class CreateGameActivity extends AppCompatActivity {
 
-    private final Activity activity = this;
-    private ArrayAdapter<CharSequence> adapter;
-    private SeekBar seek_bar;
-    private TextView seek_bar_text;
+    private Activity activity = this;
+    private RelativeLayout create_route_wrapper;
+    private RelativeLayout question_wrapper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_game);
+
+        create_route_wrapper = (RelativeLayout)findViewById(R.id.create_route_wrapper);
+        question_wrapper = (RelativeLayout)findViewById(R.id.question_wrapper);
 
         getCategories();
         getToughness();
@@ -48,6 +52,18 @@ public class CreateGameActivity extends AppCompatActivity {
     {
         HttpManager httpManager = new HttpManager(this);
         httpManager.pulldata(toughnessCallback, new String[]{"get"}, new String[]{"toughness_list"});
+    }
+
+    public void continueToQuestions(View v)
+    {
+        Spinner subject_spinner = (Spinner)findViewById(R.id.choose_subject);
+        String subject = subject_spinner.getSelectedItem().toString();
+
+        Spinner toughness_spinner = (Spinner)findViewById(R.id.choose_toughness);
+        String toughness = toughness_spinner.getSelectedItem().toString();
+
+        Log.d("OKK", subject);
+        Log.d("OKK", toughness);
     }
 
     private DeserializeCallback categoryCallback = new DeserializeCallback() {
@@ -66,7 +82,7 @@ public class CreateGameActivity extends AppCompatActivity {
                     category_strings.add(category.getCategory());
                 }
 
-                Spinner spinner = (Spinner) findViewById(R.id.subject_spinner_create);
+                Spinner spinner = (Spinner) findViewById(R.id.choose_subject);
                 ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(activity, R.layout.spinner_item, category_strings);
                 spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(spinnerArrayAdapter);
@@ -94,7 +110,7 @@ public class CreateGameActivity extends AppCompatActivity {
                     toughness_strings.add(toughness.getToughness());
                 }
 
-                Spinner spinner = (Spinner) findViewById(R.id.toughness_spinner_create);
+                Spinner spinner = (Spinner) findViewById(R.id.choose_toughness);
                 ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(activity, R.layout.spinner_item, toughness_strings);
                 spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(spinnerArrayAdapter);
@@ -129,6 +145,13 @@ public class CreateGameActivity extends AppCompatActivity {
 
             seek_bar.setOnSeekBarChangeListener(custom_seeker);
             */
+        }
+    };
+
+    private DeserializeCallback continueToQuestionsCallback = new DeserializeCallback() {
+        @Override
+        public void onSuccess(String response) {
+
         }
     };
 }

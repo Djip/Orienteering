@@ -16,10 +16,16 @@
     <string name="show_defined_questions">Use already defined questions in the same category and level?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="gametime">Gametime (Minutes)</string>
     <string name="code">Gamecode</string>
     <string name="create_questions">Create Questions</string>
     <string name="create">Create</string>
     <string name="question">Question</string>
+    <string name="answer1">Answer 1</string>
+    <string name="answer2">Answer 2</string>
+    <string name="answer3">Answer 3</string>
+    <string name="answer4">Answer 4</string>
+    <string name="correct_answer">Correct Answer</string>
 
     <string-array name="subject_array">
         <item>Math</item>

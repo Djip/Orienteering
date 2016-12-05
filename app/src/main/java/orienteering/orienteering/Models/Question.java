@@ -16,6 +16,18 @@ public class Question {
     private int plus_point;
     private int minus_point;
     private String question;
+
+    public Question(){}
+
+    public Question(int category_id, int toughness_id, String question, int plus_point, int minus_point, int route_id)
+    {
+        setCategoryId(category_id);
+        setToughnessId(toughness_id);
+        setQuestion(question);
+        setPlusPoint(plus_point);
+        setMinusPoint(minus_point);
+        setRouteId(route_id);
+    }
     
     public Question(int id, int category_id, int toughness_id, String question, int plus_point, int minus_point, int route_id)
     {
