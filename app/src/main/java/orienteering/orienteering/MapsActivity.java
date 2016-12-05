@@ -22,6 +22,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.thoughtworks.xstream.XStream;
 
+import java.util.Random;
+
 import orienteering.orienteering.Models.Category;
 import orienteering.orienteering.Models.PointOfInterest;
 import orienteering.orienteering.Models.PointOfInterestList;
@@ -31,9 +33,13 @@ import orienteering.orienteering.Models.Toughness;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.InfoWindowAdapter {
 
+    private final QuestionList question_list = new QuestionList();
     private GoogleMap mMap;
     private GpsLocation gpsLocation;
     private Intent intent;
+    private Toughness toughness;
+    private Category category;
+    private Random randomGenerator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        intent = getIntent();
+        toughness = new Toughness(intent.getIntExtra("toughness", 0));
+        category = new Category(intent.getIntExtra("category", 0));
+        randomGenerator = new Random();
     }
 
 
@@ -64,6 +75,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         gpsLocation = new GpsLocation(this, googleMap);
         gpsLocation.setRouteId(intent.getIntExtra("route_id", 0));
         gpsLocation.setShowDefaultPointOfInterest(intent.getBooleanExtra("show_default_point_of_interest", false));
+        QuestionHandler question_handler = new QuestionHandler(this, mMap);
+        question_handler.getQuestionList(getQuestionListCallback);
         gpsLocation.start();
         final Activity activity = this;
 
@@ -89,12 +102,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if(distance[0] > 2000){
                                 question_popup.setText("Du er: " + distance[0] + "m fra punktet - du skal tættere på!");
                             } else {
-                                QuestionHandler question_handler = new QuestionHandler(activity, mMap);
-                                QuestionList question_list = question_handler.getQuestionList(new Toughness(1, "1st grade"), new Category(1, "math"));
-                                for (Question question : question_list.getQuestions()){
-                                    Log.e("OKK", "Test23");
-                                    Log.e("OKK", question.getQuestion());
-                                }
+                                int index = randomGenerator.nextInt(question_list.getQuestions().size());
+                                question_popup.setText("Spørgsmål:\n" + question_list.getQuestions().get(index).getQuestion());
                             }
 
                             return v;
@@ -121,4 +130,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public boolean onMarkerClick(Marker marker) {
         return false;
     }
+
+    DeserializeCallback getQuestionListCallback = new DeserializeCallback() {
+        @Override
+        public void onSuccess(String response) {
+            try {
+                XStream xstream = new XStream();
+                xstream.alias("question", Question.class);
+                xstream.alias("questions", QuestionList.class);
+                xstream.addImplicitCollection(QuestionList.class, "questions");
+                QuestionList question_list_tmp = (QuestionList) xstream.fromXML(response);
+                for (Question question : question_list_tmp.getQuestions())
+                {
+                    if (toughness.getId() == question.getToughnessId() && category.getId() == question.getCategoryId()){
+                        question_list.add(question);
+                    }
+
+                }
+                for (Question question : question_list.getQuestions())
+                {
+                    Log.e("OKK", question.getQuestion());
+                    Log.e("OKK", "Test23");
+                }
+            } catch (Exception e) {
+                Log.e("OKK", e.getMessage());
+            }
+        }
+    };
 }

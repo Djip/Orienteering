@@ -17,6 +17,11 @@ public class Category {
         setId(id);
         setCategory(category);
     }
+
+    public Category(int id)
+    {
+        setId(id);
+    }
     
     public int getId()
     {
