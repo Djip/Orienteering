@@ -30,6 +30,8 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
     ArrayAdapter<CharSequence> adapter;
     SeekBar seek_bar;
     TextView seek_bar_text;
+    int toughness;
+    int category;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +69,7 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
                 spinner.setAdapter(adapter);
                 spinner.setOnItemSelectedListener(MenuActivity.this);
 
-                final SeekBar seek_bar = (SeekBar) findViewById(R.id.seek_bar);
+                seek_bar = (SeekBar) findViewById(R.id.seek_bar);
                 final TextView seek_bar_text = (TextView) findViewById(R.id.seek_bar_text);
                 final SeekBar.OnSeekBarChangeListener custom_seeker = new SeekBar.OnSeekBarChangeListener() {
                     @Override
@@ -75,6 +77,7 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
                         try {
                             //Toast.makeText(MenuActivity.this, seek_bar.getProgress()+"", Toast.LENGTH_SHORT).show();
                             seek_bar_text.setText(seek_bar.getProgress()+1+"");
+                            toughness = seek_bar.getProgress()+1;
                         } catch (Exception e) {
                             Log.e("MYAPP", "exception", e);
                         }
@@ -137,6 +140,8 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
                 } else {
                     Intent intent = new Intent(MenuActivity.this, MapsActivity.class);
                     intent.putExtra("show_default_point_of_interest", true);
+                    intent.putExtra("toughness", toughness);
+                    intent.putExtra("category", category);
                     startActivity(intent);
                 }
             }
@@ -147,6 +152,7 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(this, parent.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
+        this.category = position+1;
     }
 
     @Override

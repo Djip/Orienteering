@@ -17,6 +17,10 @@ public class Toughness {
         setId(id);
         setToughness(toughness);
     }
+
+    public Toughness(int id){
+        setId(id);
+    }
     
     public int getId()
     {

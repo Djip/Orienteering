@@ -28,42 +28,9 @@ public class QuestionHandler {
         this.map = map;
     }
 
-    public QuestionList getQuestionList(final Toughness toughness, final Category category){
-        final QuestionList question_list = new QuestionList();
+    public void getQuestionList(DeserializeCallback deserializeCallback){
         HttpManager httpManager = new HttpManager(maps_activity);
-        httpManager.pulldata(new DeserializeCallback() {
-            @Override
-            public void onSuccess(String response) {
-                try {
-                    XStream xstream = new XStream();
-                    xstream.alias("question", Question.class);
-                    xstream.alias("questions", QuestionList.class);
-                    xstream.addImplicitCollection(QuestionList.class, "questions");
-                    QuestionList question_list_tmp = (QuestionList) xstream.fromXML(response);
-                    for (Question question : question_list_tmp.getQuestions())
-                    {
-                        if (toughness.getId() == question.getToughnessId() && category.getId() == question.getCategoryId()){
-                            question_list.add(question);
-                        }
-
-                    }
-                    for (Question question : question_list.getQuestions())
-                    {
-                        Log.e("OKK", question.getQuestion());
-                        Log.e("OKK", "Test23");
-                    }
-                } catch (Exception e) {
-                    Log.e("OKK", e.getMessage());
-                }
-            }
-        }, new String[]{"get"}, new String[]{"question_list"});
-
-        for (Question question : question_list.getQuestions())
-        {
-            Log.e("OKK", question.getQuestion());
-            Log.e("OKK", "Test84");
-        }
-        return question_list;
+        httpManager.pulldata(deserializeCallback, new String[]{"get"}, new String[]{"question_list"});
     }
 
 }
