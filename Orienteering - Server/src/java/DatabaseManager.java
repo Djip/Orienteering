@@ -222,8 +222,9 @@ public class DatabaseManager{
                 int toughness_id = rs.getInt("toughness_id");
                 int gametime = rs.getInt("gametime");
                 boolean show_default_point_of_interest = rs.getBoolean("show_default_point_of_interest");
+                boolean show_defined_questions = rs.getBoolean("show_defined_questions");
 
-                route_list.add(new Route(id, code, user_id, category_id, toughness_id, gametime, show_default_point_of_interest));
+                route_list.add(new Route(id, code, user_id, category_id, toughness_id, gametime, show_default_point_of_interest, show_defined_questions));
             }
             
             rs.close();
@@ -243,6 +244,7 @@ public class DatabaseManager{
     
     public ArrayList<Question> getQuestions()
     {
+        // FROM ROUTE_ID!!!!
         ArrayList<Question> questions = new ArrayList<Question>();
 
         try
@@ -428,5 +430,149 @@ public class DatabaseManager{
         }
       
         return points;
+    }
+    
+    public ArrayList<Route> newRoute(Route route)
+    {
+        ArrayList<Route> routes = new ArrayList<Route>();
+        
+        try
+        {
+            String sql = "INSERT INTO route(code, user_id, toughness_id, gametime, show_default_point_of_interest, show_defined_questions) VALUES(?, ?, ?, ?, ?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, route.getCode());
+            pstmt.setInt(2, route.getUserId());
+            pstmt.setInt(3, route.getToughnessId());
+            pstmt.setInt(4, route.getGametime());
+            pstmt.setBoolean(5, route.getShowDefaultPointOfInterest());
+            pstmt.setBoolean(6, route.getShowDefinedQuestions());
+            
+            int rows = pstmt.executeUpdate();
+
+            if (rows == 1)
+            {
+                routes.add(getLastRoute(route.getUserId()));
+            }
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+        
+        return routes;
+    }
+    
+    public Route getLastRoute(int user_id)
+    {
+        Route route = new Route();
+        
+        try
+        {
+            String sql = "SELECT * FROM route WHERE user_id = ? ORDER BY id DESC LIMIT 1";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, user_id);
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Extract data from result set
+            while(rs.next()){
+                route.setId(rs.getInt("id"));
+                route.setCode(rs.getString("code"));
+                route.setCategoryId(rs.getInt("category_id"));
+                route.setToughnessId(rs.getInt("toughness_id"));
+                route.setGametime(rs.getInt("gametime"));
+                route.setShowDefaultPointOfInterest(rs.getBoolean("show_default_point_of_interest"));
+                route.setShowDefinedQuestions(rs.getBoolean("show_defined_questions"));
+            }
+            
+            rs.close();
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+      
+        return route;
+    }
+    
+    public ArrayList<Question> newQuestion(Question question)
+    {
+        ArrayList<Question> questions = new ArrayList<Question>();
+        
+        try
+        {
+            String sql = "INSERT INTO question(category_id, toughness_id, question, plus_point, minus_point, route_id) VALUES(?, ?, ?, ?, ?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, question.getCategoryId());
+            pstmt.setInt(2, question.getToughnessId());
+            pstmt.setString(3, question.getQuestion());
+            pstmt.setInt(4, question.getPlusPoint());
+            pstmt.setInt(5, question.getMinusPoint());
+            pstmt.setInt(6, question.getRouteId());
+            
+            int rows = pstmt.executeUpdate();
+
+            if (rows == 1)
+            {
+                questions.add(getLatestQuestion(question.getRouteId()));
+            }
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+        
+        return questions;
+    }
+    
+    public Question getLatestQuestion(int route_id)
+    {
+        Question question = new Question();
+        
+        try
+        {
+            String sql = "SELECT * FROM question WHERE route_id = ? ORDER BY id DESC LIMIT 1";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, route_id);
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Extract data from result set
+            while(rs.next()){
+                question.setId(rs.getInt("id"));
+                question.setCategoryId(rs.getInt("category_id"));
+                question.setToughnessId(rs.getInt("toughness_id"));
+                question.setQuestion(rs.getString("question"));
+                question.setPlusPoint(rs.getInt("plus_point"));
+                question.setMinusPoint(rs.getInt("minus_point"));
+                question.setRouteId(rs.getInt("route_id"));
+            }
+            
+            rs.close();
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+      
+        return question;
     }
 }

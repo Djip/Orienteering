@@ -114,6 +114,15 @@ public class Api extends HttpServlet {
                         }
                         break;
                         
+                    case "create_question":
+                        String question_xml = request.getParameter("question");
+                        xml = newQuestion(question_xml);
+                        break;
+                        
+                    case "create_route":
+                        String route_xml = request.getParameter("route");
+                        xml = newRoute(route_xml);
+                        break;
                 }
                 
                 out.println(xml);
@@ -347,6 +356,50 @@ public class Api extends HttpServlet {
             xstream.addImplicitCollection(PointsList.class, "points_list");
 
             xml = xstream.toXML(answerList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String newRoute(String route_xml)
+    {
+        String xml = "";
+        
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("route", Route.class);
+            xstream.alias("routes", RouteList.class);
+            xstream.addImplicitCollection(RouteList.class, "routes");
+
+            RouteList route_list = (RouteList)xstream.fromXML(route_xml);
+            Route route = route_list.getRoutes().get(0);
+
+            RouteList new_route = new RouteList(databaseManager.newRoute(route));
+            xml = xstream.toXML(new_route);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String newQuestion(String question_xml)
+    {
+        String xml = "";
+        
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("question", Question.class);
+            xstream.alias("questions", QuestionList.class);
+            xstream.addImplicitCollection(QuestionList.class, "questions");
+
+            QuestionList question_list = (QuestionList)xstream.fromXML(question_xml);
+            Question question = question_list.getQuestions().get(0);
+
+            QuestionList new_question = new QuestionList(databaseManager.newQuestion(question));
+            xml = xstream.toXML(new_question);
         } catch (Exception e) {
             e.printStackTrace();
         }

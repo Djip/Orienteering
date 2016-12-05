@@ -16,8 +16,22 @@ public class Route {
     private int toughness_id;
     private int gametime;
     private boolean show_default_point_of_interest;
+    private boolean show_defined_questions;
     
-    public Route(int id, String code, int user_id, int category_id, int toughness_id, int gametime, boolean show_default_point_of_interest)
+    public Route() {}
+    
+    public Route(String code, int user_id, int category_id, int toughness_id, int gametime, boolean show_default_point_of_interest, boolean show_defined_questions)
+    {
+        setCode(code);
+        setUserId(user_id);
+        setToughnessId(toughness_id);
+        setCategoryId(category_id);
+        setGametime(gametime);
+        setShowDefaultPointOfInterest(show_default_point_of_interest);
+        setShowDefinedQuestions(show_defined_questions);
+    }
+    
+    public Route(int id, String code, int user_id, int category_id, int toughness_id, int gametime, boolean show_default_point_of_interest, boolean show_defined_questions)
     {
         setId(id);
         setCode(code);
@@ -26,6 +40,7 @@ public class Route {
         setCategoryId(category_id);
         setGametime(gametime);
         setShowDefaultPointOfInterest(show_default_point_of_interest);
+        setShowDefinedQuestions(show_defined_questions);
     }
     
     public int getId()
@@ -94,5 +109,15 @@ public class Route {
     public void setShowDefaultPointOfInterest(boolean show_default_point_of_interest)
     {
         this.show_default_point_of_interest = show_default_point_of_interest;
+    }
+    
+    public boolean getShowDefinedQuestions()
+    {
+        return this.show_defined_questions;
+    }
+    
+    public void setShowDefinedQuestions(boolean show_defined_questions)
+    {
+        this.show_defined_questions = show_defined_questions;
     }
 }
