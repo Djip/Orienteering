@@ -2,33 +2,42 @@ package orienteering.orienteering;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 
 import java.util.ArrayList;
 
 import orienteering.orienteering.Models.Category;
 import orienteering.orienteering.Models.CategoryList;
+import orienteering.orienteering.Models.Route;
+import orienteering.orienteering.Models.RouteList;
 import orienteering.orienteering.Models.Toughness;
 import orienteering.orienteering.Models.ToughnessList;
+import orienteering.orienteering.Models.User;
+import orienteering.orienteering.Models.UserList;
 
 public class CreateGameActivity extends AppCompatActivity {
 
     private Activity activity = this;
     private RelativeLayout create_route_wrapper;
     private RelativeLayout question_wrapper;
+    private Route route;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +65,59 @@ public class CreateGameActivity extends AppCompatActivity {
 
     public void continueToQuestions(View v)
     {
+        OrienteeringApplication orienteering_application = (OrienteeringApplication)getApplication();
+        SharedPreferences shared_preferences = orienteering_application.getSharedPreferences();
+        Gson gson = new Gson();
+        User user = gson.fromJson(shared_preferences.getString("user", null), User.class);
+
+        int user_id = user.getId();
+
+        EditText gamecode_text = (EditText)findViewById(R.id.gamecode);
+        String gamecode = gamecode_text.getText().toString();
+
         Spinner subject_spinner = (Spinner)findViewById(R.id.choose_subject);
-        String subject = subject_spinner.getSelectedItem().toString();
+        int subject = subject_spinner.getSelectedItemPosition() + 1;
 
         Spinner toughness_spinner = (Spinner)findViewById(R.id.choose_toughness);
-        String toughness = toughness_spinner.getSelectedItem().toString();
+        int toughness = toughness_spinner.getSelectedItemPosition() + 1;
 
-        Log.d("OKK", subject);
-        Log.d("OKK", toughness);
+        EditText gametime_text = (EditText)findViewById(R.id.gametime);
+        int gametime = Integer.valueOf(gametime_text.getText().toString()) * 60;
+
+        RadioGroup default_points = (RadioGroup)findViewById(R.id.default_points_grp);
+        int show_default_point_of_interest_index = default_points.indexOfChild(findViewById(default_points.getCheckedRadioButtonId()));
+        boolean show_default_point_of_interest = false;
+        if (show_default_point_of_interest_index == 0)
+        {
+            show_default_point_of_interest = true;
+        }
+
+        RadioGroup defined_questions = (RadioGroup)findViewById(R.id.defined_questions_grp);
+        int show_defined_questions_index = defined_questions.indexOfChild(findViewById(defined_questions.getCheckedRadioButtonId()));
+        boolean show_defined_questions = false;
+        if (show_defined_questions_index == 0)
+        {
+            show_defined_questions = true;
+        }
+
+        Route route = new Route(gamecode, user_id, subject, toughness, gametime, show_default_point_of_interest, show_defined_questions);
+        ArrayList routes = new ArrayList<Route>();
+        routes.add(route);
+        RouteList route_list = new RouteList(routes);
+
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("route", Route.class);
+            xstream.alias("routes", RouteList.class);
+            xstream.addImplicitCollection(RouteList.class, "routes");
+            String routes_xml = xstream.toXML(route_list);
+            routes_xml = routes_xml.replace("\n", "").replace("\r", "");
+
+            HttpManager httpManager = new HttpManager(activity);
+            httpManager.pulldata(continueToQuestionsCallback, new String[]{"get", "route"}, new String[]{"create_route", routes_xml});
+        } catch (Exception e) {
+            Log.e("OKK", e.getMessage());
+        }
     }
 
     private DeserializeCallback categoryCallback = new DeserializeCallback() {
@@ -119,39 +173,26 @@ public class CreateGameActivity extends AppCompatActivity {
             {
                 Log.e("OKK", e.getMessage());
             }
-            /*
-            final SeekBar seek_bar = (SeekBar) findViewById(R.id.seek_bar_create);
-            final TextView seek_bar_text = (TextView) findViewById(R.id.seek_bar_text_create);
-            SeekBar.OnSeekBarChangeListener custom_seeker = new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    try {
-                        seek_bar_text.setText(String.valueOf(seek_bar.getProgress() + 1));
-                    } catch (Exception e) {
-                        Log.e("OKK", e.getMessage());
-                    }
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                }
-            };
-
-            seek_bar.setOnSeekBarChangeListener(custom_seeker);
-            */
         }
     };
 
     private DeserializeCallback continueToQuestionsCallback = new DeserializeCallback() {
         @Override
         public void onSuccess(String response) {
+            try {
+                XStream xstream = new XStream();
+                xstream.alias("route", Route.class);
+                xstream.alias("routes", RouteList.class);
+                xstream.addImplicitCollection(RouteList.class, "routes");
+                RouteList routeList = (RouteList)xstream.fromXML(response);
 
+                route = routeList.getRoutes().get(0);
+
+                create_route_wrapper.setVisibility(View.GONE);
+                question_wrapper.setVisibility(View.VISIBLE);
+            } catch (Exception e) {
+                Log.e("OKK", e.getMessage());
+            }
         }
     };
 }

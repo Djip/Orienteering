@@ -33,7 +33,7 @@ public class Route {
         setShowDefinedQuestions(show_defined_questions);
     }
 
-    public Route(int id, String code, int user_id, int category_id, int toughness_id, int gametime, boolean show_default_point_of_interest)
+    public Route(int id, String code, int user_id, int category_id, int toughness_id, int gametime, boolean show_default_point_of_interest, boolean show_defined_questions)
     {
         setId(id);
         setCode(code);
@@ -42,6 +42,7 @@ public class Route {
         setCategoryId(category_id);
         setGametime(gametime);
         setShowDefaultPointOfInterest(show_default_point_of_interest);
+        setShowDefinedQuestions(show_defined_questions);
     }
 
     public int getId()

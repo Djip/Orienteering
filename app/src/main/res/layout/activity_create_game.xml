@@ -15,141 +15,159 @@
         android:layout_height="match_parent"
         android:id="@+id/create_route_wrapper"
         android:visibility="visible">
-        <LinearLayout
-            android:orientation="vertical"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <TextView
-                android:text="@string/choose_subject"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:textSize="24dp" />
-            <Spinner
-                android:id="@+id/choose_subject"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </Spinner>
-
-            <TextView
-                android:text="@string/choose_level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:textSize="24dp" />
-            <Spinner
-                android:id="@+id/choose_toughness"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </Spinner>
-
-            <TextView
-                android:text="@string/gametime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:textSize="24dp" />
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:textColorHint="@color/colorWhite"
-                android:textColor="@color/colorWhite"
-                android:ems="10"
-                android:id="@+id/gametime" />
-
-            <!--
-            <SeekBar
-                android:progressDrawable="@color/colorWhite"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/seek_bar_create" />
-            <TextView
-                android:text="5"
-                android:textAlignment="center"
-                android:textSize="24dp"
-                android:textColor="@color/colorWhite"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/seek_bar_text_create" />
-            -->
-
-            <TextView
-                android:text="@string/default_points"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:textSize="24dp"
-                android:id="@+id/text_view_default_points" />
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:text="@string/yes"
+                android:layout_height="match_parent">
+                <TextView
+                    android:text="@string/new_code"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/default_points_yes"
-                    android:layout_weight="1"
                     android:textColor="@color/colorWhite"
-                    android:buttonTint="@color/colorPrimary" />
+                    android:textSize="24dp" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textShortMessage"
+                    android:maxLength="10"
+                    android:textColorHint="@color/colorWhite"
+                    android:textColor="@color/colorWhite"
+                    android:ems="10"
+                    android:id="@+id/gamecode" />
 
-                <RadioButton
-                    android:text="@string/no"
+                <TextView
+                    android:text="@string/choose_subject"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/default_points_no"
-                    android:layout_weight="1"
                     android:textColor="@color/colorWhite"
-                    android:buttonTint="@color/colorPrimary" />
-            </RadioGroup>
+                    android:textSize="24dp" />
+                <Spinner
+                    android:id="@+id/choose_subject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Spinner>
 
-            <TextView
-                android:text="@string/show_defined_questions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:textSize="24dp" />
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:text="@string/yes"
+                <TextView
+                    android:text="@string/choose_level"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/show_defined_questions_yes"
-                    android:layout_weight="1"
                     android:textColor="@color/colorWhite"
-                    android:buttonTint="@color/colorPrimary" />
+                    android:textSize="24dp" />
+                <Spinner
+                    android:id="@+id/choose_toughness"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Spinner>
 
-                <RadioButton
-                    android:text="@string/no"
+                <TextView
+                    android:text="@string/gametime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/show_defined_questions_no"
-                    android:layout_weight="1"
                     android:textColor="@color/colorWhite"
-                    android:buttonTint="@color/colorPrimary" />
-            </RadioGroup>
-        </LinearLayout>
+                    android:textSize="24dp" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:textColorHint="@color/colorWhite"
+                    android:textColor="@color/colorWhite"
+                    android:ems="10"
+                    android:id="@+id/gametime" />
 
-        <Button
-            android:layout_width="199dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:text="@string/next"
-            android:textSize="26dp"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center"
-            android:background="@drawable/rouded_button"
-            android:textColor="#FFFFFF"
-            android:id="@+id/continue_to_questions"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:onClick="continueToQuestions"/>
+                <!--
+                <SeekBar
+                    android:progressDrawable="@color/colorWhite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/seek_bar_create" />
+                <TextView
+                    android:text="5"
+                    android:textAlignment="center"
+                    android:textSize="24dp"
+                    android:textColor="@color/colorWhite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/seek_bar_text_create" />
+                -->
+
+                <TextView
+                    android:text="@string/default_points"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="24dp" />
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/default_points_grp">
+                    <RadioButton
+                        android:text="@string/yes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/colorWhite"
+                        android:buttonTint="@color/colorPrimary" />
+
+                    <RadioButton
+                        android:text="@string/no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/colorWhite"
+                        android:buttonTint="@color/colorPrimary" />
+                </RadioGroup>
+
+                <TextView
+                    android:text="@string/show_defined_questions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="24dp" />
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/defined_questions_grp">
+
+                    <RadioButton
+                        android:text="@string/yes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/show_defined_questions_yes"
+                        android:layout_weight="1"
+                        android:textColor="@color/colorWhite"
+                        android:buttonTint="@color/colorPrimary" />
+
+                    <RadioButton
+                        android:text="@string/no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/show_defined_questions_no"
+                        android:layout_weight="1"
+                        android:textColor="@color/colorWhite"
+                        android:buttonTint="@color/colorPrimary" />
+                </RadioGroup>
+
+                <Button
+                    android:layout_width="199dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="@string/next"
+                    android:textSize="26dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/rouded_button"
+                    android:textColor="#FFFFFF"
+                    android:id="@+id/continue_to_questions"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:onClick="continueToQuestions"/>
+            </LinearLayout>
+        </ScrollView>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"

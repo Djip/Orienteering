@@ -11,6 +11,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.net.URLEncoder;
+
 /**
  * Created by jespe on 28-11-2016.
  */
@@ -38,7 +40,14 @@ public class HttpManager{
 
         for (int i = 0; i < parameters.length; i++)
         {
-            url += parameters[i] + "=" + values[i];
+            try
+            {
+                url += parameters[i] + "=" + URLEncoder.encode(values[i], "UTF-8");
+            }
+            catch (Exception e)
+            {
+
+            }
             if (i != parameters.length - 1)
             {
                 url += "&";
@@ -47,7 +56,6 @@ public class HttpManager{
 
         Log.d("OKK", url);
 
-        String xml;
         stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -64,6 +72,5 @@ public class HttpManager{
         });
 
         requestQueue.add(stringRequest);
-        //requestQueue.start();
     }
 }

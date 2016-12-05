@@ -17,6 +17,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="gametime">Gametime (Minutes)</string>
+    <string name="new_code">Gamecode (Max. 10 Characters)</string>
     <string name="code">Gamecode</string>
     <string name="create_questions">Create Questions</string>
     <string name="create">Create</string>
