@@ -69,12 +69,5 @@
         android:id="@+id/answer_question"
         android:background="@drawable/rouded_button"
         android:layout_weight="1" />
-
-    <TextView
-        android:text=""
-        android:id="@+id/answer_result"
-        android:textColor="@color/colorWhite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 </LinearLayout>
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package orienteering.orienteering;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.text.Text;
 import com.thoughtworks.xstream.XStream;
@@ -66,12 +68,14 @@ public class QuestionActivity extends AppCompatActivity {
                         correct_answer = a;
                     }
                 }
-                TextView result = (TextView)findViewById(R.id.answer_result);
+
                 if(correct_answer != null && answer == correct_answer.getAnswer()){
-                    result.setText("Korrekt!");
+                    Toast.makeText(getApplicationContext(), "Correct!", Toast.LENGTH_LONG).show();
+                    finish();
                     //PERSONEN HAR SVARET RIGTIGT!
                 } else {
-                    result.setText("Forkert!");
+                    Toast.makeText(getApplicationContext(), "Wrong!", Toast.LENGTH_LONG).show();
+                    finish();
                     //PERSONEN HAR SVARET FORKERT!
                 }
             }
