@@ -27,6 +27,7 @@
     <string name="answer3">Answer 3</string>
     <string name="answer4">Answer 4</string>
     <string name="correct_answer">Correct Answer</string>
+    <string name="answer_question">Answer</string>
 
     <string-array name="subject_array">
         <item>Math</item>
@@ -37,5 +38,6 @@
     </string-array>
 
     <string name="http_url" translatable="false">http://85.233.225.116:8080/Orienteering/Api?</string>
+
 
 </resources>

@@ -21,16 +21,19 @@ import orienteering.orienteering.Models.Toughness;
 public class QuestionHandler {
 
     private Activity maps_activity;
-    private GoogleMap map;
+    private HttpManager httpManager;
 
-    public QuestionHandler(Activity maps_activity, GoogleMap map){
+    public QuestionHandler(Activity maps_activity){
         this.maps_activity = maps_activity;
-        this.map = map;
+        httpManager = new HttpManager(maps_activity);
     }
 
     public void getQuestionList(DeserializeCallback deserializeCallback){
-        HttpManager httpManager = new HttpManager(maps_activity);
         httpManager.pulldata(deserializeCallback, new String[]{"get"}, new String[]{"question_list"});
+    }
+
+    public void getAnswerByQuestionId(DeserializeCallback deserializeCallback, int question_id){
+        httpManager.pulldata(deserializeCallback, new String[]{"get", "question_id"}, new String[]{"answer_list", String.valueOf(question_id)});
     }
 
 }

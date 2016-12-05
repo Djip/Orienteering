@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.google.android.gms.location.LocationListener;
@@ -24,6 +26,8 @@ import com.thoughtworks.xstream.XStream;
 
 import java.util.Random;
 
+import orienteering.orienteering.Models.Answer;
+import orienteering.orienteering.Models.AnswerList;
 import orienteering.orienteering.Models.Category;
 import orienteering.orienteering.Models.PointOfInterest;
 import orienteering.orienteering.Models.PointOfInterestList;
@@ -33,13 +37,14 @@ import orienteering.orienteering.Models.Toughness;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.InfoWindowAdapter {
 
-    private final QuestionList question_list = new QuestionList();
     private GoogleMap mMap;
     private GpsLocation gpsLocation;
     private Intent intent;
-    private Toughness toughness;
-    private Category category;
-    private Random randomGenerator;
+    private int toughness_id;
+    private int category_id;
+    private View point_popup_view;
+    private TextView question_textview;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +56,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         intent = getIntent();
-        toughness = new Toughness(intent.getIntExtra("toughness", 0));
-        category = new Category(intent.getIntExtra("category", 0));
-        randomGenerator = new Random();
+        toughness_id = intent.getIntExtra("toughness", 0);
+        category_id = intent.getIntExtra("category", 0);
+        point_popup_view = getLayoutInflater().inflate(R.layout.info_window_layout, null);
+        question_textview = (TextView) point_popup_view.findViewById(R.id.question_textview);
     }
 
 
@@ -75,8 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         gpsLocation = new GpsLocation(this, googleMap);
         gpsLocation.setRouteId(intent.getIntExtra("route_id", 0));
         gpsLocation.setShowDefaultPointOfInterest(intent.getBooleanExtra("show_default_point_of_interest", false));
-        QuestionHandler question_handler = new QuestionHandler(this, mMap);
-        question_handler.getQuestionList(getQuestionListCallback);
+
         gpsLocation.start();
         final Activity activity = this;
 
@@ -94,19 +99,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         @Override
                         public View getInfoContents(Marker marker) {
-                            View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
+                            //View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
                             LatLng lat_lng = marker.getPosition();
-                            final TextView question_popup = (TextView) v.findViewById(R.id.question_box);
                             float[] distance = new float[1];
                             Location.distanceBetween(gpsLocation.lat, gpsLocation.lon, lat_lng.latitude, lat_lng.longitude, distance);
                             if(distance[0] > 2000){
-                                question_popup.setText("Du er: " + distance[0] + "m fra punktet - du skal tættere på!");
+                                question_textview.setText("Du er: " + distance[0] + "m fra punktet - du skal tættere på!");
                             } else {
-                                int index = randomGenerator.nextInt(question_list.getQuestions().size());
-                                question_popup.setText("Spørgsmål:\n" + question_list.getQuestions().get(index).getQuestion());
+                                Intent intent = new Intent(MapsActivity.this, QuestionActivity.class);
+                                intent.putExtra("category_id", category_id);
+                                intent.putExtra("toughness_id", toughness_id);
+                                startActivity(intent);
                             }
 
-                            return v;
+                            return point_popup_view;
                         }
                     });
 
@@ -131,30 +137,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return false;
     }
 
-    DeserializeCallback getQuestionListCallback = new DeserializeCallback() {
-        @Override
-        public void onSuccess(String response) {
-            try {
-                XStream xstream = new XStream();
-                xstream.alias("question", Question.class);
-                xstream.alias("questions", QuestionList.class);
-                xstream.addImplicitCollection(QuestionList.class, "questions");
-                QuestionList question_list_tmp = (QuestionList) xstream.fromXML(response);
-                for (Question question : question_list_tmp.getQuestions())
-                {
-                    if (toughness.getId() == question.getToughnessId() && category.getId() == question.getCategoryId()){
-                        question_list.add(question);
-                    }
 
-                }
-                for (Question question : question_list.getQuestions())
-                {
-                    Log.e("OKK", question.getQuestion());
-                    Log.e("OKK", "Test23");
-                }
-            } catch (Exception e) {
-                Log.e("OKK", e.getMessage());
-            }
-        }
-    };
 }

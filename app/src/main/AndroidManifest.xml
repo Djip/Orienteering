@@ -42,6 +42,7 @@
             android:label="@string/title_activity_maps" />
         <activity android:name=".MenuActivity" android:screenOrientation="portrait" />
         <activity android:name=".CreateGameActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".QuestionActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
