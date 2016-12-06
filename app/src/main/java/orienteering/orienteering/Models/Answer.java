@@ -13,6 +13,8 @@ public class Answer {
     private int question_id;
     private String answer;
     private boolean correct;
+
+    public Answer(){}
     
     public Answer(int id, int question_id, String answer, boolean correct)
     {
