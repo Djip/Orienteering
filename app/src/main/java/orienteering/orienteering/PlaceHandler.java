@@ -63,7 +63,7 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
                     for (PointOfInterest point : point_of_interest_list.getPointOfInterests())
                     {
                         LatLng lat_lng = new LatLng(point.getLatitude(), point.getLongitude());
-                        map.addMarker(new MarkerOptions().position(lat_lng).title(point.getTitle()));
+                        map.addMarker(new MarkerOptions().position(lat_lng));
                         lat_lng_list.add(lat_lng);
                     }
                 } catch (Exception e) {
@@ -128,7 +128,7 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
 
                         case XmlPullParser.END_TAG:
                             if(name.equals("result")){
-                                list.add(new MapsPointOfInterest(lat, lon, label));
+                                list.add(new MapsPointOfInterest(lat, lon));
                                 this.lat_lng_list.add(new LatLng(lat, lon));
 
                             }
@@ -157,7 +157,7 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
     protected void onPostExecute(MapsPointOfInterestList list) {
         for (MapsPointOfInterest point : list.getPointOfInterests()){
             LatLng lat_lng = new LatLng(point.getLatitude(), point.getLongitude());
-            map.addMarker(new MarkerOptions().position(lat_lng).title(point.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+            map.addMarker(new MarkerOptions().position(lat_lng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         }
     }
 

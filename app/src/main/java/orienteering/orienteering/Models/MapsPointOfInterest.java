@@ -12,14 +12,12 @@ public class MapsPointOfInterest {
 
     private double latitude;
     private double longitude;
-    private String title;
 
-    public MapsPointOfInterest(double latitude, double longitude, String title)
+    public MapsPointOfInterest(double latitude, double longitude)
     {
 
         setLatitude(latitude);
         setLongitude(longitude);
-        setTitle(title);
     }
 
     public double getLatitude()
@@ -40,15 +38,5 @@ public class MapsPointOfInterest {
     public void setLongitude(double longitude)
     {
         this.longitude = longitude;
-    }
-
-    public String getTitle()
-    {
-        return this.title;
-    }
-
-    public void setTitle(String title)
-    {
-        this.title = title;
     }
 }
