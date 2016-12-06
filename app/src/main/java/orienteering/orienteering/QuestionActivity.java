@@ -1,6 +1,7 @@
 package orienteering.orienteering;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +40,7 @@ public class QuestionActivity extends AppCompatActivity {
     private RadioButton answer2;
     private RadioButton answer3;
     private RadioButton answer4;
+    boolean got_answer = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,29 +56,33 @@ public class QuestionActivity extends AppCompatActivity {
         toughness = new Toughness(getIntent().getIntExtra("toughness_id", 0));
 
 
-        Button next = (Button)findViewById(R.id.answer_question);
+        final Button next = (Button)findViewById(R.id.answer_question);
         next.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                RadioGroup radio_group = (RadioGroup)findViewById(R.id.answer_radiogroup);
-                RadioButton checked_radio = (RadioButton)findViewById(radio_group.getCheckedRadioButtonId());
-                String answer = checked_radio.getText().toString();
-                Answer correct_answer = null;
-                for (Answer a : answer_list.getAnswers()){
-                    if (a.getCorrect()){
-                        correct_answer = a;
+                if (got_answer) {
+                    RadioGroup radio_group = (RadioGroup) findViewById(R.id.answer_radiogroup);
+                    RadioButton checked_radio = (RadioButton) findViewById(radio_group.getCheckedRadioButtonId());
+                    String answer = checked_radio.getText().toString();
+                    Answer correct_answer = null;
+                    for (Answer a : answer_list.getAnswers()) {
+                        if (a.getCorrect()) {
+                            correct_answer = a;
+                        }
                     }
-                }
 
-                if(correct_answer != null && answer == correct_answer.getAnswer()){
-                    Toast.makeText(getApplicationContext(), "Correct!", Toast.LENGTH_LONG).show();
-                    finish();
-                    //PERSONEN HAR SVARET RIGTIGT!
+                    if (correct_answer != null && answer == correct_answer.getAnswer()) {
+                        Toast.makeText(getApplicationContext(), "Correct!", Toast.LENGTH_LONG).show();
+                        finish();
+                        //PERSONEN HAR SVARET RIGTIGT!
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Wrong!", Toast.LENGTH_LONG).show();
+                        finish();
+                        //PERSONEN HAR SVARET FORKERT!
+                    }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Wrong!", Toast.LENGTH_LONG).show();
-                    finish();
-                    //PERSONEN HAR SVARET FORKERT!
+                    Toast.makeText(getApplicationContext(), getString(R.string.choose_answer), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -139,4 +145,10 @@ public class QuestionActivity extends AppCompatActivity {
             }
         }
     };
+
+        public void onRadioGroupClick(View view){
+        final Button next = (Button)findViewById(R.id.answer_question);
+        next.setBackground(getDrawable(R.drawable.rouded_button));
+            got_answer = true;
+    }
 }

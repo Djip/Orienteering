@@ -32,7 +32,8 @@
             android:layout_height="match_parent"
             android:textColor="@color/colorWhite"
             android:id="@+id/answer1"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onRadioGroupClick"/>
 
         <RadioButton
             android:text=""
@@ -41,7 +42,8 @@
             android:layout_height="match_parent"
             android:textColor="@color/colorWhite"
             android:id="@+id/answer2"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onRadioGroupClick"/>
 
         <RadioButton
             android:text=""
@@ -50,7 +52,8 @@
             android:layout_height="match_parent"
             android:textColor="@color/colorWhite"
             android:id="@+id/answer3"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onRadioGroupClick"/>
 
         <RadioButton
             android:text=""
@@ -59,7 +62,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
             android:id="@+id/answer4"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onRadioGroupClick"/>
     </RadioGroup>
 
     <Button
@@ -67,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/answer_question"
-        android:background="@drawable/rouded_button"
+        android:background="@drawable/rounded_button_disabled"
         android:layout_weight="1" />
 </LinearLayout>
 </RelativeLayout>

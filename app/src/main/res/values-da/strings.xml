@@ -16,6 +16,7 @@
     <string name="plus_point">plus point</string>
     <string name="minus_point">minus point</string>
     <string name="add_question_error">Tilføjelse af spørgsmål fejlet</string>
+    <string name="choose_answer">Du skal vælge et svar</string>
 
     <string-array name="subject_array">
         <item>Matematik</item>

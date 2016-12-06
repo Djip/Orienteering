@@ -35,7 +35,7 @@ import orienteering.orienteering.Models.Question;
 import orienteering.orienteering.Models.QuestionList;
 import orienteering.orienteering.Models.Toughness;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.InfoWindowAdapter {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener{
 
     private GoogleMap mMap;
     private GpsLocation gpsLocation;
@@ -88,48 +88,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                if(marker.getTitle() == "This is you!"){
-                    // ingenting
+                if(marker.getId().equals(gpsLocation.getUserMarker().getId())){
+
                 } else {
-                    mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                        @Override
-                        public View getInfoWindow(Marker marker) {
-                            return null;
-                        }
-
-                        @Override
-                        public View getInfoContents(Marker marker) {
-                            //View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
-                            LatLng lat_lng = marker.getPosition();
-                            float[] distance = new float[1];
-                            Location.distanceBetween(gpsLocation.lat, gpsLocation.lon, lat_lng.latitude, lat_lng.longitude, distance);
-                            if(distance[0] > 2000){
-                                question_textview.setText("Du er: " + distance[0] + "m fra punktet - du skal tættere på!");
-                            } else {
-                                Intent intent = new Intent(MapsActivity.this, QuestionActivity.class);
-                                intent.putExtra("category_id", category_id);
-                                intent.putExtra("toughness_id", toughness_id);
-                                startActivity(intent);
-                            }
-
-                            return point_popup_view;
-                        }
-                    });
-
+                    Log.e("OKK", marker.getId() + "------" + gpsLocation.getUserMarker().getId());
+                    LatLng lat_lng = marker.getPosition();
+                    float[] distance = new float[1];
+                    Location.distanceBetween(gpsLocation.lat, gpsLocation.lon, lat_lng.latitude, lat_lng.longitude, distance);
+                    if (distance[0] > 2000) {
+                        marker.setTitle("Du er: " + distance[0] + "m fra punktet - du skal tættere på!");
+                        //question_textview.setText("Du er: " + distance[0] + "m fra punktet - du skal tættere på!");
+                    } else {
+                        Intent intent = new Intent(MapsActivity.this, QuestionActivity.class);
+                        intent.putExtra("category_id", category_id);
+                        intent.putExtra("toughness_id", toughness_id);
+                        startActivity(intent);
+                    }
                 }
                 return false;
             }
         });
-    }
-
-    @Override
-    public View getInfoWindow(Marker marker) {
-        return null;
-    }
-
-    @Override
-    public View getInfoContents(Marker marker) {
-        return null;
     }
 
     @Override

@@ -31,6 +31,7 @@
     <string name="plus_point">plus points</string>
     <string name="minus_point">minus points</string>
     <string name="add_question_error">Add question failed</string>
+    <string name="choose_answer">You have to choose an answer</string>
 
     <string-array name="subject_array">
         <item>Math</item>
