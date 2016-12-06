@@ -62,7 +62,7 @@ public class Api extends HttpServlet {
                         }
                         catch (Exception e)
                         {
-                            out.println("<error>Wrong question_id</error>");
+                            out.println("<error>Wrong route_id</error>");
                         }
                         break;
                         
@@ -126,9 +126,27 @@ public class Api extends HttpServlet {
                         String answers_xml = request.getParameter("answers");
                         xml = newAnswers(answers_xml);
                         break;
+                        
+                    case "create_point_of_interest":
+                        String point_of_interest_xml = request.getParameter("point_of_interest");
+                        String route_id_parameter3 = request.getParameter("route_id");
+                        try
+                        {
+                            int route_id = Integer.parseInt(route_id_parameter3);
+                         
+                            xml = newPointOfInterest(point_of_interest_xml, route_id);
+                        }
+                        catch(Exception e)
+                        {
+                            out.println("error");
+                        }
+                        break;
+                        
+                    case "highscore_list":
+                        break;
                 }
                 
-                if (xml != "success" && xml != "error")
+                if (!xml.equals("success") && !xml.equals("error"))
                 {
                     response.setContentType("text/xml;charset=UTF-8");
                 }
@@ -429,6 +447,27 @@ public class Api extends HttpServlet {
             AnswerList answer_list = (AnswerList)xstream.fromXML(answers_xml);
 
             String status = databaseManager.newAnswers(answer_list.getAnswers());
+            xml = status;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String newPointOfInterest(String point_of_interest_xml, int route_id)
+    {
+        String xml = "";
+        
+        try {
+            XStream xstream = new XStream();
+            xstream.alias("point_of_interest", PointOfInterest.class);
+            xstream.alias("point_of_interests", PointOfInterestList.class);
+            xstream.addImplicitCollection(PointOfInterestList.class, "point_of_interests");
+
+            PointOfInterestList point_of_interest_list = (PointOfInterestList)xstream.fromXML(point_of_interest_xml);
+
+            String status = databaseManager.newPointOfInterest(point_of_interest_list.getPointOfInterests().get(0), route_id);
             xml = status;
         } catch (Exception e) {
             e.printStackTrace();

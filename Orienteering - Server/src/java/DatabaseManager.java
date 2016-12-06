@@ -616,4 +616,80 @@ public class DatabaseManager{
         
         return status;
     }
+    
+    public String newPointOfInterest(PointOfInterest point_of_interest, int route_id)
+    {
+        String status = "error";
+        
+        try
+        {
+            String sql = "INSERT INTO point_of_interest(latitude, longitude) VALUES(?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setDouble(1, point_of_interest.getLatitude());
+            pstmt.setDouble(2, point_of_interest.getLongitude());
+
+            int rows = pstmt.executeUpdate();
+
+            if (rows == 1)
+            {
+                point_of_interest.setId(getLatestPointOfInterest());
+                
+                if (point_of_interest.getId() != 0)
+                {
+                    sql = "INSERT INTO route_point_of_interest_rel(route_id, point_of_interest_id) VALUES(?, ?)";
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.setInt(1, route_id);
+                    pstmt.setInt(2, point_of_interest.getId());
+                    
+                    rows = pstmt.executeUpdate();
+
+                    if (rows == 1)
+                    {
+                        status = "success";
+                    }
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+            return "error";
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+        
+        return status;
+    }
+    
+    private int getLatestPointOfInterest()
+    {   
+        int point_of_interest_id = 0;
+        
+        try
+        {
+            String sql = "SELECT id FROM point_of_interest ORDER BY id DESC LIMIT 1";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Extract data from result set
+            while(rs.next()){
+                point_of_interest_id = rs.getInt("id");
+            }
+            
+            rs.close();
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+        
+        return point_of_interest_id;
+    }
 }

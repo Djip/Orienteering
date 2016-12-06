@@ -13,6 +13,14 @@ public class PointOfInterest {
     private double latitude;
     private double longitude;
     
+    public PointOfInterest(){}
+
+    public PointOfInterest(LatLng lat_lng)
+    {
+        setLatitude(lat_lng.latitude);
+        setLongitude(lat_lng.longitude);
+    }
+    
     public PointOfInterest(int id, double latitude, double longitude)
     {
         setId(id);
