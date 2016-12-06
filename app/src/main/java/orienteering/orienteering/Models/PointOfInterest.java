@@ -4,6 +4,8 @@ package orienteering.orienteering.Models;/*
  * and open the template in the editor.
  */
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  *
  * @author jespe
@@ -12,16 +14,18 @@ public class PointOfInterest {
     private int id;
     private double latitude;
     private double longitude;
-    private String title;
-    private int route_id;
+
+    public PointOfInterest(LatLng lat_lng)
+    {
+        setLatitude(lat_lng.latitude);
+        setLongitude(lat_lng.longitude);
+    }
     
-    public PointOfInterest(int id, double latitude, double longitude, String title, int route_id)
+    public PointOfInterest(int id, double latitude, double longitude)
     {
         setId(id);
         setLatitude(latitude);
         setLongitude(longitude);
-        setTitle(title);
-        setRouteId(route_id);
     }
     
     public int getId()
@@ -52,25 +56,5 @@ public class PointOfInterest {
     public void setLongitude(double longitude)
     {
         this.longitude = longitude;
-    }
-    
-    public String getTitle()
-    {
-        return this.title;
-    }
-    
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-    
-    public int getRouteId()
-    {
-        return this.route_id;
-    }
-    
-    public void setRouteId(int route_id)
-    {
-        this.route_id = route_id;
     }
 }

@@ -183,9 +183,8 @@ public class DatabaseManager{
                 int id  = rs.getInt("id");
                 double latitude = rs.getDouble("latitude");
                 double longitude = rs.getDouble("longitude");
-                String title = rs.getString("title");
 
-                point_of_interests.add(new PointOfInterest(id, latitude, longitude, title, route_id));
+                point_of_interests.add(new PointOfInterest(id, latitude, longitude));
             }
             
             rs.close();
