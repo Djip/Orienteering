@@ -132,7 +132,7 @@ public class Api extends HttpServlet {
                         try
                         {
                             int route_id = Integer.parseInt(route_id_parameter3);
-                         
+                            
                             xml = newPointOfInterest(point_of_interest_xml, route_id);
                         }
                         catch(Exception e)
@@ -158,6 +158,7 @@ public class Api extends HttpServlet {
                             out.println("<error>Wrong parameters</error>");
                         }
                         break;
+                        
                     case "change_user_points":
                         String user_id_parameter3 = request.getParameter("user_id");
                         String route_id_parameter2 = request.getParameter("route_id");
@@ -494,12 +495,10 @@ public class Api extends HttpServlet {
         try {
             XStream xstream = new XStream();
             xstream.alias("point_of_interest", PointOfInterest.class);
-            xstream.alias("point_of_interests", PointOfInterestList.class);
-            xstream.addImplicitCollection(PointOfInterestList.class, "point_of_interests");
 
-            PointOfInterestList point_of_interest_list = (PointOfInterestList)xstream.fromXML(point_of_interest_xml);
+            PointOfInterest point_of_interest = (PointOfInterest)xstream.fromXML(point_of_interest_xml);
 
-            String status = databaseManager.newPointOfInterest(point_of_interest_list.getPointOfInterests().get(0), route_id);
+            String status = databaseManager.newPointOfInterest(point_of_interest, route_id);
             xml = status;
         } catch (Exception e) {
             e.printStackTrace();

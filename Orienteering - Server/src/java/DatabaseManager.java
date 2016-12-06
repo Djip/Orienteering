@@ -632,7 +632,7 @@ public class DatabaseManager{
 
             if (rows == 1)
             {
-                point_of_interest.setId(getLatestPointOfInterest());
+                point_of_interest.setId(getLatestPointOfInterest(false));
                 
                 if (point_of_interest.getId() != 0)
                 {
@@ -664,7 +664,7 @@ public class DatabaseManager{
         return status;
     }
     
-    private int getLatestPointOfInterest()
+    private int getLatestPointOfInterest(boolean close_connection)
     {   
         int point_of_interest_id = 0;
         
@@ -687,7 +687,10 @@ public class DatabaseManager{
         }
         finally
         {
-            closeDatabaseConnection();
+            if (close_connection)
+            {
+                closeDatabaseConnection();
+            }
         }
         
         return point_of_interest_id;
@@ -702,7 +705,15 @@ public class DatabaseManager{
             String sql = "INSERT INTO points(user_id, route_id, points) VALUES(?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, user_id);
-            pstmt.setInt(2, route_id);
+            if (route_id == 0)
+            {
+                pstmt.setNull(2, java.sql.Types.INTEGER);
+            }
+            else
+            {
+                pstmt.setInt(2, route_id);
+            }
+            
             pstmt.setInt(3, 0);
 
             int rows = pstmt.executeUpdate();
@@ -747,7 +758,14 @@ public class DatabaseManager{
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, points);
             pstmt.setInt(2, user_id);
-            pstmt.setInt(3, route_id);
+            if (route_id == 0)
+            {
+                pstmt.setNull(3, java.sql.Types.INTEGER);
+            }
+            else
+            {
+                pstmt.setInt(3, route_id);
+            }
 
             int rows = pstmt.executeUpdate();
 

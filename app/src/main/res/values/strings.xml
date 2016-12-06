@@ -35,8 +35,10 @@
     <string name="create_point_info">Press on the map to initialize a new point/move the current point.\nClick on Create Point when the point is ready\nTo clear a point, click it, and press the Clear Point button</string>
     <string name="create_point">Create Point</string>
     <string name="clear_point">Clear Point</string>
-    <string name="create_point_success">Successfully added the <point></point></string>
+    <string name="create_point_error_no_point">Please press on the map and make a point before saving</string>
+    <string name="create_point_success">Successfully added the point</string>
     <string name="create_point_error">Error, try saving the point again</string>
+    <string name="done">Done</string>
 
     <string-array name="subject_array">
         <item>Math</item>
