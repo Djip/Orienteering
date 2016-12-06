@@ -616,4 +616,83 @@ public class DatabaseManager{
         
         return status;
     }
+    
+    public String emptyPointsEntry(int user_id, int route_id){
+        String status = "error";
+        
+        try
+        {
+                String sql = "INSERT INTO points(user_id, route_id, points) VALUES(?, ?, ?)";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, user_id);
+                pstmt.setInt(2, route_id);
+                pstmt.setInt(3, 0);
+
+                int rows = pstmt.executeUpdate();
+                
+                if (rows == 1)
+                {
+                    status = "success";
+                }
+                else
+                {
+                    status = "error";
+                }
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+            return "error";
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+        
+        return status;
+    }
+    
+    
+    public String changeUserPoints(int user_id, int route_id, int points){
+        String status = "error";
+        
+        try
+        {
+            String sql = "";
+            
+            if(points < 0){
+                sql = "UPDATE points SET points = points ? WHERE user_id = ? AND route_id = ?";
+            } else {
+                sql = "UPDATE points SET points = points + ? WHERE user_id = ? AND route_id = ?";
+            }
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, points);
+                pstmt.setInt(2, user_id);
+                pstmt.setInt(3, route_id);
+
+                int rows = pstmt.executeUpdate();
+                
+                if (rows == 1)
+                {
+                    status = "success";
+                }
+                else
+                {
+                    status = "error";
+                }
+        }
+        catch(Exception e)
+        {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+            return "error";
+        }
+        finally
+        {
+            closeDatabaseConnection();
+        }
+        
+        return status;
+    }
 }
