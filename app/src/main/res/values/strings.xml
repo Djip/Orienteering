@@ -2,7 +2,6 @@
     <string name="app_name">Orienteering</string>
     <string name="preference_name" translatable="false">Orienteering</string>
 
-    <string name="title_activity_maps">Map</string>
     <string name="choose_username">Choose username</string>
     <string name="start">Start</string>
     <string name="create_game">Create Game</string>
@@ -31,6 +30,9 @@
     <string name="plus_point">Points for a correct answer</string>
     <string name="minus_point">Missing points for a wrong answer</string>
     <string name="add_question_error">Everything have to be filled, to create a question</string>
+    <string name="create_point_info">Press on the map to initialize a new point/move the current point.\nClick on Create Point when the point is ready\nTo clear a point, click it, and press the Clear Point button</string>
+    <string name="create_point">Create Point</string>
+    <string name="clear_point">Clear Point</string>
 
     <string-array name="subject_array">
         <item>Math</item>
@@ -41,7 +43,4 @@
     </string-array>
 
     <string name="http_url" translatable="false">http://85.233.225.116:8080/Orienteering/Api?</string>
-
-
-
 </resources>
