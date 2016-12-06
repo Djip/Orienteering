@@ -12,16 +12,12 @@ public class PointOfInterest {
     private int id;
     private double latitude;
     private double longitude;
-    private String title;
-    private int route_id;
     
-    public PointOfInterest(int id, double latitude, double longitude, String title, int route_id)
+    public PointOfInterest(int id, double latitude, double longitude)
     {
         setId(id);
         setLatitude(latitude);
         setLongitude(longitude);
-        setTitle(title);
-        setRouteId(route_id);
     }
     
     public int getId()
@@ -52,25 +48,5 @@ public class PointOfInterest {
     public void setLongitude(double longitude)
     {
         this.longitude = longitude;
-    }
-    
-    public String getTitle()
-    {
-        return this.title;
-    }
-    
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-    
-    public int getRouteId()
-    {
-        return this.route_id;
-    }
-    
-    public void setRouteId(int route_id)
-    {
-        this.route_id = route_id;
     }
 }
