@@ -42,7 +42,9 @@
             android:textAlignment="center"
             android:layout_marginTop="20dp"
             android:textColor="@color/colorWhite"
-            android:id="@+id/username" />
+            android:id="@+id/username"
+            android:inputType="textShortMessage"
+            android:imeOptions="actionDone" />
 
         <Button
             android:layout_width="199dp"
