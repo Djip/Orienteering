@@ -28,10 +28,13 @@
     <string name="answer4">Answer 4</string>
     <string name="correct_answer">Correct Answer</string>
     <string name="answer_question">Answer</string>
-    <string name="plus_point">plus points</string>
-    <string name="minus_point">minus points</string>
-    <string name="add_question_error">Add question failed</string>
     <string name="choose_answer">You have to choose an answer</string>
+    <string name="plus_point">Points for a correct answer</string>
+    <string name="minus_point">Missing points for a wrong answer</string>
+    <string name="add_question_error">Everything have to be filled, to create a question</string>
+    <string name="create_point_info">Press on the map to initialize a new point/move the current point.\nClick on Create Point when the point is ready\nTo clear a point, click it, and press the Clear Point button</string>
+    <string name="create_point">Create Point</string>
+    <string name="clear_point">Clear Point</string>
 
     <string-array name="subject_array">
         <item>Math</item>
