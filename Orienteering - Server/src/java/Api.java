@@ -33,7 +33,6 @@ public class Api extends HttpServlet {
             databaseManager = new DatabaseManager();
             
             String apiRequest = request.getParameter("get");
-            
             if (apiRequest != "" && apiRequest != null)
             {
                 String xml = "";
@@ -143,6 +142,39 @@ public class Api extends HttpServlet {
                         break;
                         
                     case "highscore_list":
+
+                    case "empty_point_entry":
+                        String user_id_parameter2 = request.getParameter("user_id");
+                        String route_id_parameter = request.getParameter("route_id");
+                        try
+                        {
+                            int user_id = Integer.parseInt(user_id_parameter2);
+                            int route_id = Integer.parseInt(route_id_parameter);
+                            
+                            xml = createEmptyPointEntry(user_id, route_id);
+                        }
+                        catch (Exception e)
+                        {
+                            out.println("<error>Wrong parameters</error>");
+                        }
+                        break;
+                    case "change_user_points":
+                        String user_id_parameter3 = request.getParameter("user_id");
+                        String route_id_parameter2 = request.getParameter("route_id");
+                        String points_parameter = request.getParameter("points");
+                       
+                        try
+                        {
+                            int user_id = Integer.parseInt(user_id_parameter3);
+                            int route_id = Integer.parseInt(route_id_parameter2);
+                            int points = Integer.parseInt(points_parameter);
+                            
+                            xml = changeUserPoints(user_id, route_id, points);
+                        }
+                        catch (Exception e)
+                        {
+                            out.println("<error>Wrong parameters</error>");
+                        }
                         break;
                 }
                 
@@ -474,5 +506,32 @@ public class Api extends HttpServlet {
         }
         
         return xml;
+    }
+    
+    private String createEmptyPointEntry(int user_id, int route_id){
+        String xml = "";
+        
+        try {
+            String status = databaseManager.emptyPointsEntry(user_id, route_id);
+            xml = status;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+    }
+    
+    private String changeUserPoints(int user_id, int route_id, int points){
+        String xml = "";
+        
+        try {
+            String status = databaseManager.changeUserPoints(user_id, route_id, points);
+            xml = status;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return xml;
+        
     }
 }
