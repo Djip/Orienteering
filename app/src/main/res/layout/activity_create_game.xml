@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/create_route_wrapper"
-        android:visibility="visible">
+        android:visibility="gone">
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -173,7 +173,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/question_wrapper"
-        android:visibility="gone">
+        android:visibility="visible">
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -362,7 +362,8 @@
                     android:textColor="#FFFFFF"
                     android:id="@+id/continue_to_points"
                     android:layout_centerHorizontal="true"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_alignParentBottom="true"
+                    android:onClick="continueToCreateRoutePoints"/>
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>

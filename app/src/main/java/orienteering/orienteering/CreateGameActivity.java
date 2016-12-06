@@ -2,6 +2,7 @@ package orienteering.orienteering;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -77,13 +78,11 @@ public class CreateGameActivity extends AppCompatActivity {
 
     private void getCategories()
     {
-        HttpManager httpManager = new HttpManager(this);
         httpManager.pulldata(categoryCallback, new String[]{"get"}, new String[]{"category_list"});
     }
 
     private void getToughness()
     {
-        HttpManager httpManager = new HttpManager(this);
         httpManager.pulldata(toughnessCallback, new String[]{"get"}, new String[]{"toughness_list"});
     }
 
@@ -187,6 +186,15 @@ public class CreateGameActivity extends AppCompatActivity {
                 Log.e("OKK", e.getMessage());
             }
         }
+    }
+
+    public void continueToCreateRoutePoints(View v)
+    {
+        route = new Route(5, "test", 0, 0, 0, 0, false, false);
+        Intent intent = new Intent(CreateGameActivity.this, CreateRoutePoints.class);
+        intent.putExtra("route_id", route.getId());
+        startActivity(intent);
+        finish();
     }
 
     private DeserializeCallback categoryCallback = new DeserializeCallback() {

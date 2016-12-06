@@ -15,6 +15,8 @@ public class PointOfInterest {
     private double latitude;
     private double longitude;
 
+    public PointOfInterest(){}
+
     public PointOfInterest(LatLng lat_lng)
     {
         setLatitude(lat_lng.latitude);

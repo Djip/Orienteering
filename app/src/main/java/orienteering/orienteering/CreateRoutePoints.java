@@ -1,18 +1,29 @@
 package orienteering.orienteering;
 
+import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 public class CreateRoutePoints extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private Activity activity;
+    private HttpManager httpManager;
+    private int route_id;
+    private Marker marker;
+    private ArrayList<Marker> markers = new ArrayList<Marker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +33,10 @@ public class CreateRoutePoints extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        route_id = getIntent().getIntExtra("route_id", 0);
+
+        httpManager = new HttpManager(this);
     }
 
 
@@ -38,9 +53,40 @@ public class CreateRoutePoints extends FragmentActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (marker == null)
+                {
+                    marker = mMap.addMarker(new MarkerOptions().position(latLng));
+                }
+                else
+                {
+                    marker.setPosition(latLng);
+                }
+            }
+        });
     }
+
+    public void saveMarker(View v)
+    {
+        httpManager.pulldata(saveMarkerCallback, new String[]{"get", "point_of_interest"}, new String[]{"create_point_of_interest", String.valueOf(route_id)});
+    }
+
+    private DeserializeCallback saveMarkerCallback = new DeserializeCallback() {
+        @Override
+        public void onSuccess(String response) {
+            if (response.equals("success"))
+            {
+                Toast.makeText(activity, getResources().getString(R.string.create_point_success), Toast.LENGTH_SHORT).show();
+
+                markers.add(marker);
+                marker = null;
+            }
+            else
+            {
+                Toast.makeText(activity, getResources().getString(R.string.create_point_error), Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 }
