@@ -17,7 +17,7 @@ import javax.servlet.http.*;
 public class Api extends HttpServlet {
 
     private DatabaseManager databaseManager;
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -31,182 +31,166 @@ public class Api extends HttpServlet {
             throws ServletException, IOException {
         try (PrintWriter out = response.getWriter()) {
             databaseManager = new DatabaseManager();
-            
+
             String apiRequest = request.getParameter("get");
-            if (apiRequest != "" && apiRequest != null)
-            {
+            if (apiRequest != "" && apiRequest != null) {
                 String xml = "";
-                switch(apiRequest)
-                {
+                switch (apiRequest) {
                     case "user_list":
                         xml = getUserList();
                         break;
-                        
+
                     case "check_username":
                         String check_username = request.getParameter("username");
                         xml = checkUsername(check_username);
                         break;
-                        
+
                     case "new_user":
                         String new_username = request.getParameter("username");
                         xml = newUser(new_username);
                         break;
-                        
+
                     case "point_of_interest_list":
                         String route_id_parameter_1 = request.getParameter("route_id");
-                        try
-                        {
+                        try {
                             int route_id = Integer.parseInt(route_id_parameter_1);
                             xml = getPointOfInterestList(route_id);
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             out.println("<error>Wrong route_id</error>");
                         }
                         break;
-                        
+
                     case "route":
                         String code = request.getParameter("route_code");
                         xml = getRouteFromCode(code);
                         break;
-                        
+
                     case "question_list":
                         xml = getQuestionList();
                         break;
-                        
+
                     case "category_list":
                         xml = getCategoryList();
                         break;
-                        
+
                     case "toughness_list":
                         xml = getToughnessList();
                         break;
-                        
+
                     case "answer_list":
                         String question_id_parameter = request.getParameter("question_id");
-                        try
-                        {
+                        try {
                             int question_id = Integer.parseInt(question_id_parameter);
                             xml = getAnswerList(question_id);
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             out.println("<error>Wrong question_id</error>");
                         }
                         break;
-                        
+
                     case "points_list":
                         String user_id_parameter = request.getParameter("user_id");
                         String route_id_parameter_2 = request.getParameter("route_id");
-                        try
-                        {
+                        try {
                             int user_id = Integer.parseInt(user_id_parameter);
                             int route_id = Integer.parseInt(route_id_parameter_2);
-                            
+
                             xml = getPointsList(user_id, route_id);
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             out.println("<error>Wrong parameters</error>");
                         }
                         break;
-                        
+
                     case "create_route":
                         String route_xml = request.getParameter("route");
                         xml = newRoute(route_xml);
                         break;
-                        
+
                     case "create_question":
                         String question_xml = request.getParameter("question");
                         xml = newQuestion(question_xml);
                         break;
-                        
+
                     case "create_answers":
                         String answers_xml = request.getParameter("answers");
                         xml = newAnswers(answers_xml);
                         break;
-                        
+
                     case "create_point_of_interest":
                         String point_of_interest_xml = request.getParameter("point_of_interest");
                         String route_id_parameter3 = request.getParameter("route_id");
-                        try
-                        {
+                        try {
                             int route_id = Integer.parseInt(route_id_parameter3);
-                            
+
                             xml = newPointOfInterest(point_of_interest_xml, route_id);
-                        }
-                        catch(Exception e)
-                        {
+                        } catch (Exception e) {
                             out.println("error");
                         }
                         break;
-                        
+
                     case "remove_point_of_interest":
                         String point_of_interest_xml1 = request.getParameter("point_of_interest");
                         String route_id_parameter4 = request.getParameter("route_id");
-                        try
-                        {
+                        try {
                             int route_id = Integer.parseInt(route_id_parameter4);
-                            
+
                             xml = newPointOfInterest(point_of_interest_xml1, route_id);
-                        }
-                        catch(Exception e)
-                        {
+                        } catch (Exception e) {
                             out.println("error");
                         }
                         break;
-                        
+
                     case "highscore_list":
 
                     case "empty_point_entry":
                         String user_id_parameter2 = request.getParameter("user_id");
                         String route_id_parameter = request.getParameter("route_id");
-                        try
-                        {
+                        try {
                             int user_id = Integer.parseInt(user_id_parameter2);
                             int route_id = Integer.parseInt(route_id_parameter);
-                            
+
                             xml = createEmptyPointEntry(user_id, route_id);
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             out.println("<error>Wrong parameters</error>");
                         }
                         break;
-                        
+
                     case "change_user_points":
                         String user_id_parameter3 = request.getParameter("user_id");
                         String route_id_parameter2 = request.getParameter("route_id");
                         String points_parameter = request.getParameter("points");
-                       
-                        try
-                        {
+
+                        try {
                             int user_id = Integer.parseInt(user_id_parameter3);
                             int route_id = Integer.parseInt(route_id_parameter2);
                             int points = Integer.parseInt(points_parameter);
-                            
+
                             xml = changeUserPoints(user_id, route_id, points);
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             out.println("<error>Wrong parameters</error>");
                         }
                         break;
+                    case "set_point_triggered":
+                        String point_triggered_xml = request.getParameter("point_triggered");
+
+                        try {
+                            xml = setPointTriggered(point_triggered_xml);
+                        } catch (Exception e) {
+                            out.println("<error>Wrong parameters</error>");
+                        }
+                        break;
+                    case "get_point_triggered":
+
+                        break;
                 }
-                
-                if (!xml.equals("success") && !xml.equals("error"))
-                {
+
+                if (!xml.equals("success") && !xml.equals("error")) {
                     response.setContentType("text/xml;charset=UTF-8");
-                }
-                else
-                {
+                } else {
                     response.setContentType("text/html;charset=UTF-8");
                 }
-                
+
                 out.println(xml);
-            }
-            else
-            {
+            } else {
                 out.println("Invalid request");
             }
         }
@@ -240,11 +224,10 @@ public class Api extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-    
-    private String getUserList()
-    {
+
+    private String getUserList() {
         String xml = "";
-        
+
         UserList userList = new UserList(databaseManager.getUsers());
 
         try {
@@ -257,14 +240,13 @@ public class Api extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String checkUsername(String username)
-    {
+
+    private String checkUsername(String username) {
         String xml = "";
-        
+
         UserList userList = new UserList(databaseManager.checkUsername(username, true));
 
         try {
@@ -277,14 +259,13 @@ public class Api extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String newUser(String username)
-    {
+
+    private String newUser(String username) {
         String xml = "";
-        
+
         UserList userList = new UserList(databaseManager.newUser(username));
 
         try {
@@ -297,14 +278,13 @@ public class Api extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String getPointOfInterestList(int route_id)
-    {
+
+    private String getPointOfInterestList(int route_id) {
         String xml = "";
-        
+
         PointOfInterestList pointOfInterestList = new PointOfInterestList(databaseManager.getPointOfInterests(route_id));
 
         try {
@@ -317,14 +297,13 @@ public class Api extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String getRouteFromCode(String code)
-    {
+
+    private String getRouteFromCode(String code) {
         String xml = "";
-        
+
         RouteList route = new RouteList(databaseManager.getRouteFromCode(code));
 
         try {
@@ -337,14 +316,13 @@ public class Api extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String getQuestionList()
-    {
+
+    private String getQuestionList() {
         String xml = "";
-        
+
         QuestionList questionList = new QuestionList(databaseManager.getQuestions());
 
         try {
@@ -357,14 +335,13 @@ public class Api extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String getCategoryList()
-    {
+
+    private String getCategoryList() {
         String xml = "";
-        
+
         CategoryList categoryList = new CategoryList(databaseManager.getCategories());
 
         try {
@@ -377,14 +354,13 @@ public class Api extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String getToughnessList()
-    {
+
+    private String getToughnessList() {
         String xml = "";
-        
+
         ToughnessList toughnessList = new ToughnessList(databaseManager.getToughnessList());
 
         try {
@@ -397,14 +373,13 @@ public class Api extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String getAnswerList(int question_id)
-    {
+
+    private String getAnswerList(int question_id) {
         String xml = "";
-        
+
         AnswerList answerList = new AnswerList(databaseManager.getAnswers(question_id));
 
         try {
@@ -417,14 +392,13 @@ public class Api extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String getPointsList(int user_id, int route_id)
-    {
+
+    private String getPointsList(int user_id, int route_id) {
         String xml = "";
-        
+
         PointsList answerList = new PointsList(databaseManager.getPoints(user_id, route_id));
 
         try {
@@ -437,134 +411,147 @@ public class Api extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String newRoute(String route_xml)
-    {
+
+    private String newRoute(String route_xml) {
         String xml = "";
-        
+
         try {
             XStream xstream = new XStream();
             xstream.alias("route", Route.class);
             xstream.alias("routes", RouteList.class);
             xstream.addImplicitCollection(RouteList.class, "routes");
 
-            RouteList route_list = (RouteList)xstream.fromXML(route_xml);
+            RouteList route_list = (RouteList) xstream.fromXML(route_xml);
             Route route = route_list.getRoutes().get(0);
-            
+
             RouteList new_route = new RouteList(databaseManager.newRoute(route));
             xml = xstream.toXML(new_route);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String newQuestion(String question_xml)
-    {
+
+    private String newQuestion(String question_xml) {
         String xml = "";
-        
+
         try {
             XStream xstream = new XStream();
             xstream.alias("question", Question.class);
 
-            Question question = (Question)xstream.fromXML(question_xml);
+            Question question = (Question) xstream.fromXML(question_xml);
 
             Question new_question = databaseManager.newQuestion(question);
             xml = xstream.toXML(new_question);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String newAnswers(String answers_xml)
-    {
+
+    private String newAnswers(String answers_xml) {
         String xml = "";
-        
+
         try {
             XStream xstream = new XStream();
             xstream.alias("answer", Answer.class);
             xstream.alias("answers", AnswerList.class);
             xstream.addImplicitCollection(AnswerList.class, "answers");
 
-            AnswerList answer_list = (AnswerList)xstream.fromXML(answers_xml);
+            AnswerList answer_list = (AnswerList) xstream.fromXML(answers_xml);
 
             String status = databaseManager.newAnswers(answer_list.getAnswers());
             xml = status;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String newPointOfInterest(String point_of_interest_xml, int route_id)
-    {
+
+    private String newPointOfInterest(String point_of_interest_xml, int route_id) {
         String xml = "";
-        
+
         try {
             XStream xstream = new XStream();
             xstream.alias("point_of_interest", PointOfInterest.class);
 
-            PointOfInterest point_of_interest = (PointOfInterest)xstream.fromXML(point_of_interest_xml);
+            PointOfInterest point_of_interest = (PointOfInterest) xstream.fromXML(point_of_interest_xml);
 
             String status = databaseManager.newPointOfInterest(point_of_interest, route_id);
             xml = status;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String removePointOfInterest(String point_of_interest_xml, int route_id)
-    {
+
+    private String removePointOfInterest(String point_of_interest_xml, int route_id) {
         String xml = "";
-        
+
         try {
             XStream xstream = new XStream();
             xstream.alias("point_of_interest", PointOfInterest.class);
 
-            PointOfInterest point_of_interest = (PointOfInterest)xstream.fromXML(point_of_interest_xml);
+            PointOfInterest point_of_interest = (PointOfInterest) xstream.fromXML(point_of_interest_xml);
 
             String status = databaseManager.removePointOfInterest(point_of_interest, route_id);
             xml = status;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String createEmptyPointEntry(int user_id, int route_id){
+
+    private String createEmptyPointEntry(int user_id, int route_id) {
         String xml = "";
-        
+
         try {
             String status = databaseManager.emptyPointsEntry(user_id, route_id);
             xml = status;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return xml;
     }
-    
-    private String changeUserPoints(int user_id, int route_id, int points){
+
+    private String changeUserPoints(int user_id, int route_id, int points) {
         String xml = "";
-        
+
         try {
             String status = databaseManager.changeUserPoints(user_id, route_id, points);
             xml = status;
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return xml;
+
+    }
+
+    private String setPointTriggered(String point_triggered_xml) {
+        String xml = "";
+
+        try {
+            
+            XStream xstream = new XStream();
+            xstream.alias("point_triggered", PointTriggered.class);
+
+            PointTriggered point_triggered = (PointTriggered) xstream.fromXML(point_triggered_xml);
+            
+            String status = databaseManager.setPointTriggered(point_triggered);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
         return xml;
-        
     }
 }

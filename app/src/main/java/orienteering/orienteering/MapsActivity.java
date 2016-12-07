@@ -101,7 +101,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Intent intent = new Intent(MapsActivity.this, QuestionActivity.class);
                         intent.putExtra("category_id", category_id);
                         intent.putExtra("toughness_id", toughness_id);
+
                         intent.putExtra("route_id", intent.getIntExtra("route_id", 0));
+                        Bundle marker_position = new Bundle();
+                        marker_position.putParcelable("point", marker.getPosition());
+                        intent.putExtra("point", marker_position);
                         startActivity(intent);
                     }
                 }

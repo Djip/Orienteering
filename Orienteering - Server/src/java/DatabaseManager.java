@@ -694,4 +694,29 @@ public class DatabaseManager {
 
         return status;
     }
+
+    public String setPointTriggered(PointTriggered point_triggered) {
+        String status = "error";
+
+        try {
+            String sql = "INSERT INTO point_triggered(route_id, user_id, latitude, longitude, timestamp) VALUES(?, ?, ?, ?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, point_triggered.getRouteId());
+            pstmt.setInt(2, point_triggered.getUserId());
+            pstmt.setDouble(3, point_triggered.getLatitude());
+            pstmt.setDouble(4, point_triggered.getLongitude());
+            pstmt.setTimestamp(5, point_triggered.getTimestamp());
+
+            int rows = pstmt.executeUpdate();
+
+            if (rows == 1) {
+                status = "success";
+            } else {
+                status = "error";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return status;
+    }
 }

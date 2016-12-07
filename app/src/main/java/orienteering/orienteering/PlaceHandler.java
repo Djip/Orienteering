@@ -3,6 +3,7 @@ package orienteering.orienteering;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.google.android.gms.fitness.data.Value;
@@ -32,6 +33,7 @@ import orienteering.orienteering.Models.MapsPointOfInterest;
 import orienteering.orienteering.Models.MapsPointOfInterestList;
 import orienteering.orienteering.Models.PointOfInterest;
 import orienteering.orienteering.Models.PointOfInterestList;
+import orienteering.orienteering.Models.PointTriggered;
 import orienteering.orienteering.Models.User;
 import orienteering.orienteering.Models.UserList;
 
@@ -41,16 +43,30 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
     private double lat;
     private double lon;
     private ArrayList<LatLng> lat_lng_list = new ArrayList<LatLng>();
+    HttpManager httpManager;
 
     public PlaceHandler(Activity maps_activity, double lat, double lon, GoogleMap map){
         this.maps_activity = maps_activity;
         this.map = map;
         this.lon = lon;
         this.lat = lat;
+        httpManager = new HttpManager(maps_activity);
+    }
+
+    public PlaceHandler(){
+        httpManager = new HttpManager(maps_activity);
+    }
+
+    public void setPointTriggered(final PointTriggered point_triggered){
+
+        XStream xstream = new XStream();
+        xstream.alias("point_triggered", PointTriggered.class);
+        String point_triggered_xml = xstream.toXML(point_triggered);
+        httpManager.pulldata(setPointTriggeredCallback, new String[]{"get", "point_triggered"}, new String[]{"set_point_triggered", point_triggered_xml});
     }
 
     public void getRoutePoints(int route_id){
-        HttpManager httpManager = new HttpManager(maps_activity);
+
         httpManager.pulldata(new DeserializeCallback() {
             @Override
             public void onSuccess(String response) {
@@ -63,7 +79,7 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
                     for (PointOfInterest point : point_of_interest_list.getPointOfInterests())
                     {
                         LatLng lat_lng = new LatLng(point.getLatitude(), point.getLongitude());
-                        map.addMarker(new MarkerOptions().position(lat_lng));
+                        map.addMarker(new MarkerOptions().position(lat_lng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                         lat_lng_list.add(lat_lng);
                     }
                 } catch (Exception e) {
@@ -164,4 +180,19 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
     public ArrayList<LatLng> getLatLngList(){
         return this.lat_lng_list;
     }
+
+    private DeserializeCallback setPointTriggeredCallback = new DeserializeCallback() {
+        @Override
+        public void onSuccess(String response) {
+            Log.d("OKK", response);
+            if (response.trim().equals("success"))
+            {
+                Log.d("OKK", "Set point triggered succesfull");
+            }
+            else
+            {
+                Log.d("OKK", "Set point triggered failed");
+            }
+        }
+    };
 }

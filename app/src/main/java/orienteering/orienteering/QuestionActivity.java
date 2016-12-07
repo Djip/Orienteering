@@ -1,5 +1,6 @@
 package orienteering.orienteering;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -15,15 +16,19 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.vision.text.Text;
 import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.mapper.CGLIBMapper;
 
+import java.sql.Timestamp;
 import java.util.Random;
 
 import orienteering.orienteering.Models.Answer;
 import orienteering.orienteering.Models.AnswerList;
 import orienteering.orienteering.Models.Category;
+import orienteering.orienteering.Models.PointTriggered;
 import orienteering.orienteering.Models.Question;
 import orienteering.orienteering.Models.QuestionList;
 import orienteering.orienteering.Models.Toughness;
@@ -89,10 +94,14 @@ public class QuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (got_answer) {
+                    PlaceHandler place_handler = new PlaceHandler();
                     RadioGroup radio_group = (RadioGroup) findViewById(R.id.answer_radiogroup);
                     RadioButton checked_radio = (RadioButton) findViewById(radio_group.getCheckedRadioButtonId());
                     String answer = checked_radio.getText().toString();
                     Answer correct_answer = null;
+                    Bundle bundle = intent.getBundleExtra("point");
+                    LatLng marker_position = bundle.getParcelable("point");
+                    PointTriggered point_triggered = new PointTriggered(user_id, intent.getIntExtra("route_id", 0), marker_position.latitude, marker_position.longitude, new Timestamp(System.currentTimeMillis()));
                     for (Answer a : answer_list.getAnswers()) {
                         if (a.getCorrect()) {
                             correct_answer = a;
@@ -104,12 +113,15 @@ public class QuestionActivity extends AppCompatActivity {
                         Log.e("OKK", intent.getIntExtra("route_id", 0) + " " + user_id + " " + current_question.getPlusPoint());
                         points_handler.changeUserPoints(changeUserPoints, intent.getIntExtra("route_id", 0), user_id, current_question.getPlusPoint());
                         current_question = null;
+                        place_handler.setPointTriggered(point_triggered);
                         finish();
                         //PERSONEN HAR SVARET RIGTIGT!
                     } else {
                         Toast.makeText(getApplicationContext(), "Wrong!", Toast.LENGTH_LONG).show();
-                        points_handler.changeUserPoints(changeUserPoints, intent.getIntExtra("route_id", 0), user_id, current_question.getMinusPoint());
+                        int minus_points = -1 * current_question.getMinusPoint();
+                        points_handler.changeUserPoints(changeUserPoints, intent.getIntExtra("route_id", 0), user_id, minus_points);
                         current_question = null;
+                        place_handler.setPointTriggered(point_triggered);
                         finish();
                         //PERSONEN HAR SVARET FORKERT!
                     }
