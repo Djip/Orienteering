@@ -505,37 +505,32 @@ public class DatabaseManager {
 
         try {
             point_of_interest.setId(getPointOfInterest(false, point_of_interest.getLatitude(), point_of_interest.getLongitude()));
-
-            int rows = 0;
+            
             if (point_of_interest.getId() == 0) {
                 String sql = "INSERT INTO point_of_interest(latitude, longitude) VALUES(?, ?)";
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 pstmt.setDouble(1, point_of_interest.getLatitude());
                 pstmt.setDouble(2, point_of_interest.getLongitude());
 
-                rows = pstmt.executeUpdate();
-            }
+                int rows = pstmt.executeUpdate();
+                
+                if (rows == 1) {
+                    point_of_interest.setId(getPointOfInterest(false, point_of_interest.getLatitude(), point_of_interest.getLongitude()));
 
-            if (point_of_interest.getId() != 0 || rows == 1) {
-                point_of_interest.setId(getPointOfInterest(false, point_of_interest.getLatitude(), point_of_interest.getLongitude()));
-
-                if (point_of_interest.getId() != 0) {
-                    String sql = "INSERT INTO route_point_of_interest_rel(route_id, point_of_interest_id) VALUES(?, ?)";
-                    PreparedStatement pstmt = conn.prepareStatement(sql);
-                    pstmt.setInt(1, route_id);
-                    pstmt.setInt(2, point_of_interest.getId());
-
-                    rows = pstmt.executeUpdate();
-
-                    if (rows == 1) {
-                        status = "success";
+                    if (point_of_interest.getId() != 0)
+                    {
+                        status = insertRoutePointOfInterestRel(route_id, point_of_interest.getId());
                     }
                 }
+            }
+            else
+            {
+                status = insertRoutePointOfInterestRel(route_id, point_of_interest.getId());
             }
         } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-            return "error";
+            status = "error";
         } finally {
             closeDatabaseConnection();
         }
@@ -570,6 +565,31 @@ public class DatabaseManager {
         }
 
         return point_of_interest_id;
+    }
+    
+    private String insertRoutePointOfInterestRel(int route_id, int point_of_interest_id)
+    {
+        String status = "error";
+        
+        try
+        {
+            String sql = "INSERT INTO route_point_of_interest_rel(route_id, point_of_interest_id) VALUES(?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, route_id);
+            pstmt.setInt(2, point_of_interest_id);
+
+            int rows = pstmt.executeUpdate();
+
+            if (rows == 1) {
+                status = "success";
+            }
+        }
+        catch(Exception e)
+        {
+            status = "error";
+        }
+        
+        return status;
     }
 
     public String removePointOfInterest(PointOfInterest point_of_interest, int route_id) {

@@ -83,6 +83,22 @@ public class CreateRoutePoints extends FragmentActivity implements OnMapReadyCal
                 }
             }
         });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if (markers.contains(marker))
+                {
+                    Log.d("OKK", "NICE!");
+                }
+                else
+                {
+                    Log.d("OKK", "NONO");
+                }
+
+                return false;
+            }
+        });
     }
 
     public void saveMarker(View v)
@@ -104,7 +120,6 @@ public class CreateRoutePoints extends FragmentActivity implements OnMapReadyCal
     private DeserializeCallback saveMarkerCallback = new DeserializeCallback() {
         @Override
         public void onSuccess(String response) {
-            Log.d("OKK", response);
             if (response.trim().equals("success"))
             {
                 Toast.makeText(activity, getResources().getString(R.string.create_point_success), Toast.LENGTH_SHORT).show();
