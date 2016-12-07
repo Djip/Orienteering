@@ -132,13 +132,13 @@ public class Api extends HttpServlet {
                         String longitude_parameter = request.getParameter("longitude");
                         String route_id_parameter4 = request.getParameter("route_id");
                         try {
-                            int latitude = Integer.parseInt(latitude_parameter);
-                            int longitude = Integer.parseInt(longitude_parameter);
+                            double latitude = Double.parseDouble(latitude_parameter);
+                            double longitude = Double.parseDouble(longitude_parameter);
                             int route_id = Integer.parseInt(route_id_parameter4);
-
+                            
                             xml = removePointOfInterest(latitude, longitude, route_id);
                         } catch (Exception e) {
-                            out.println("error");
+                            xml = "error";
                         }
                         break;
 
@@ -495,7 +495,7 @@ public class Api extends HttpServlet {
         return xml;
     }
 
-    private String removePointOfInterest(int latitude, int longitude, int route_id) {
+    private String removePointOfInterest(double latitude, double longitude, int route_id) {
         String xml = "";
 
         try {

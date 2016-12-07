@@ -38,6 +38,9 @@
     <string name="create_point_error_no_point">Please press on the map and make a point before saving</string>
     <string name="create_point_success">Successfully added the point</string>
     <string name="create_point_error">Error, try saving the point again</string>
+    <string name="remove_point_error_no_point">You have to select a point to delete it</string>
+    <string name="remove_point_success">Successfully removed point</string>
+    <string name="remove_point_error">Error, try to remove the point again</string>
     <string name="done">Done</string>
 
     <string-array name="subject_array">
@@ -49,7 +52,4 @@
     </string-array>
 
     <string name="http_url" translatable="false">http://85.233.225.116:8080/Orienteering/Api?</string>
-
-
-
 </resources>

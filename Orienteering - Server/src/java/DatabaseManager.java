@@ -596,14 +596,14 @@ public class DatabaseManager {
         String status = "error";
 
         try {
-            String sql = "DELETE FROM route_point_of_interest_rel WHERE point_of_interest_id = (SELECT id FROM point_of_interest WHERE latitude = ? AND longitude = ?) AND route_id = 5";
+            String sql = "DELETE FROM route_point_of_interest_rel WHERE point_of_interest_id = (SELECT id FROM point_of_interest WHERE latitude = ? AND longitude = ?) AND route_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setDouble(1, latitude);
             pstmt.setDouble(2, longitude);
-            pstmt.setInt(4, route_id);
+            pstmt.setInt(3, route_id);
 
             int rows = pstmt.executeUpdate();
-
+            
             if (rows == 1) {
                 status = "success";
             }

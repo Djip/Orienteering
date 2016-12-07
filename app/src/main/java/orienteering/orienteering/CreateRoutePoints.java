@@ -31,6 +31,7 @@ public class CreateRoutePoints extends FragmentActivity implements OnMapReadyCal
     private int route_id;
     private Marker marker;
     private ArrayList<Marker> markers = new ArrayList<Marker>();
+    private Marker remove_marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,11 +90,7 @@ public class CreateRoutePoints extends FragmentActivity implements OnMapReadyCal
             public boolean onMarkerClick(Marker marker) {
                 if (markers.contains(marker))
                 {
-                    Log.d("OKK", "NICE!");
-                }
-                else
-                {
-                    Log.d("OKK", "NONO");
+                    remove_marker = marker;
                 }
 
                 return false;
@@ -105,7 +102,7 @@ public class CreateRoutePoints extends FragmentActivity implements OnMapReadyCal
     {
         if (marker == null)
         {
-            Toast.makeText(activity, getResources().getString(R.string.create_point_error), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, getResources().getString(R.string.remove_point_error_no_point), Toast.LENGTH_SHORT).show();
         }
         else
         {
@@ -114,6 +111,18 @@ public class CreateRoutePoints extends FragmentActivity implements OnMapReadyCal
             PointOfInterest point_of_interest = new PointOfInterest(marker.getPosition());
             String point_of_interest_xml = xstream.toXML(point_of_interest);
             httpManager.pulldata(saveMarkerCallback, new String[]{"get", "point_of_interest", "route_id"}, new String[]{"create_point_of_interest", point_of_interest_xml, String.valueOf(route_id)});
+        }
+    }
+
+    public void removeMarker(View v)
+    {
+        if (remove_marker == null)
+        {
+            Toast.makeText(activity, getResources().getString(R.string.remove_point_error_no_point), Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            httpManager.pulldata(removeMarkerCallback, new String[]{"get", "latitude", "longitude", "route_id"}, new String[]{"remove_point_of_interest", String.valueOf(remove_marker.getPosition().latitude), String.valueOf(remove_marker.getPosition().longitude), String.valueOf(route_id)});
         }
     }
 
@@ -131,6 +140,24 @@ public class CreateRoutePoints extends FragmentActivity implements OnMapReadyCal
             else
             {
                 Toast.makeText(activity, getResources().getString(R.string.create_point_error), Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
+    private DeserializeCallback removeMarkerCallback = new DeserializeCallback() {
+        @Override
+        public void onSuccess(String response) {
+            if (response.trim().equals("success"))
+            {
+                Toast.makeText(activity, getResources().getString(R.string.remove_point_success), Toast.LENGTH_SHORT).show();
+
+                markers.remove(remove_marker);
+                remove_marker.remove();
+                remove_marker = null;
+            }
+            else
+            {
+                Toast.makeText(activity, getResources().getString(R.string.remove_point_error), Toast.LENGTH_SHORT).show();
             }
         }
     };
