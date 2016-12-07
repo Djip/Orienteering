@@ -328,7 +328,7 @@ public class CreateGameActivity extends AppCompatActivity {
     private DeserializeCallback createAnswersCallback = new DeserializeCallback() {
         @Override
         public void onSuccess(String response) {
-            if (response.equals("success"))
+            if (response.trim().equals("success"))
             {
                 question_text.setText("");
                 answer1_text.setText("");
