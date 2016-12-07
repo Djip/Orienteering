@@ -128,12 +128,15 @@ public class Api extends HttpServlet {
                         break;
 
                     case "remove_point_of_interest":
-                        String point_of_interest_xml1 = request.getParameter("point_of_interest");
+                        String latitude_parameter = request.getParameter("latitude");
+                        String longitude_parameter = request.getParameter("longitude");
                         String route_id_parameter4 = request.getParameter("route_id");
                         try {
+                            int latitude = Integer.parseInt(latitude_parameter);
+                            int longitude = Integer.parseInt(longitude_parameter);
                             int route_id = Integer.parseInt(route_id_parameter4);
 
-                            xml = newPointOfInterest(point_of_interest_xml1, route_id);
+                            xml = removePointOfInterest(latitude, longitude, route_id);
                         } catch (Exception e) {
                             out.println("error");
                         }
@@ -492,16 +495,11 @@ public class Api extends HttpServlet {
         return xml;
     }
 
-    private String removePointOfInterest(String point_of_interest_xml, int route_id) {
+    private String removePointOfInterest(int latitude, int longitude, int route_id) {
         String xml = "";
 
         try {
-            XStream xstream = new XStream();
-            xstream.alias("point_of_interest", PointOfInterest.class);
-
-            PointOfInterest point_of_interest = (PointOfInterest) xstream.fromXML(point_of_interest_xml);
-
-            String status = databaseManager.removePointOfInterest(point_of_interest, route_id);
+            String status = databaseManager.removePointOfInterest(latitude, longitude, route_id);
             xml = status;
         } catch (Exception e) {
             e.printStackTrace();

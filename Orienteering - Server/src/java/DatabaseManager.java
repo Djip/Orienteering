@@ -592,14 +592,15 @@ public class DatabaseManager {
         return status;
     }
 
-    public String removePointOfInterest(PointOfInterest point_of_interest, int route_id) {
+    public String removePointOfInterest(double latitude, double longitude, int route_id) {
         String status = "error";
 
         try {
-            String sql = "DELETE FROM route_point_of_interest_rel WHERE point_of_interest_id = ? AND route_id = ?";
+            String sql = "DELETE FROM route_point_of_interest_rel WHERE point_of_interest_id = (SELECT id FROM point_of_interest WHERE latitude = ? AND longitude = ?) AND route_id = 5";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDouble(1, point_of_interest.getId());
-            pstmt.setDouble(2, route_id);
+            pstmt.setDouble(1, latitude);
+            pstmt.setDouble(2, longitude);
+            pstmt.setInt(4, route_id);
 
             int rows = pstmt.executeUpdate();
 
