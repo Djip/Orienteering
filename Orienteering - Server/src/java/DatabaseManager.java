@@ -505,10 +505,9 @@ public class DatabaseManager {
 
         try {
             point_of_interest.setId(getPointOfInterest(false, point_of_interest.getLatitude(), point_of_interest.getLongitude()));
-            
+
             int rows = 0;
-            if (point_of_interest.getId() == 0)
-            {
+            if (point_of_interest.getId() == 0) {
                 String sql = "INSERT INTO point_of_interest(latitude, longitude) VALUES(?, ?)";
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 pstmt.setDouble(1, point_of_interest.getLatitude());
@@ -552,7 +551,7 @@ public class DatabaseManager {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setDouble(1, latitude);
             pstmt.setDouble(2, longitude);
-            
+
             ResultSet rs = pstmt.executeQuery();
 
             // Extract data from result set
@@ -572,40 +571,40 @@ public class DatabaseManager {
 
         return point_of_interest_id;
     }
-    
-    public String removePointOfInterest(PointOfInterest point_of_interest, int route_id)
-    {
+
+    public String removePointOfInterest(PointOfInterest point_of_interest, int route_id) {
         String status = "error";
-        
-        try
-        {
+
+        try {
             String sql = "DELETE FROM route_point_of_interest_rel WHERE point_of_interest_id = ? AND route_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setDouble(1, point_of_interest.getId());
             pstmt.setDouble(2, route_id);
-            
+
             int rows = pstmt.executeUpdate();
-            
-            if (rows == 1)
-            {
+
+            if (rows == 1) {
                 status = "success";
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return "error";
         }
-        
+
         return status;
     }
 
     public String emptyPointsEntry(int user_id, int route_id) {
         boolean is_created = false;
         String status = "error";
+        String sql_get = "";
 
         try {
-            String sql_get = "SELECT * FROM points where user_id = ? AND route_id = ?";
+            if (route_id == 0) {
+                sql_get = "SELECT * FROM points where user_id = ? AND route_id IS ?";
+            } else {
+                sql_get = "SELECT * FROM points where user_id = ? AND route_id = ?";
+            }
             PreparedStatement pstmt_get = conn.prepareStatement(sql_get);
             pstmt_get.setInt(1, user_id);
             if (route_id == 0) {
@@ -655,14 +654,18 @@ public class DatabaseManager {
 
     public String changeUserPoints(int user_id, int route_id, int points) {
         String status = "error";
-
+        String is_or_equals = "=";
         try {
             String sql = "";
 
+            if (route_id == 0) {
+                is_or_equals = "IS";
+            }
+
             if (points < 0) {
-                sql = "UPDATE points SET points = points ? WHERE user_id = ? AND route_id = ?";
+                sql = "UPDATE points SET points = points ? WHERE user_id = ? AND route_id " + is_or_equals + " ?";
             } else {
-                sql = "UPDATE points SET points = points + ? WHERE user_id = ? AND route_id = ?";
+                sql = "UPDATE points SET points = points + ? WHERE user_id = ? AND route_id " + is_or_equals + " ?";
             }
 
             PreparedStatement pstmt = conn.prepareStatement(sql);

@@ -1,5 +1,7 @@
 package orienteering.orienteering;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.text.Text;
+import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 
 import java.util.Random;
@@ -24,6 +27,7 @@ import orienteering.orienteering.Models.Category;
 import orienteering.orienteering.Models.Question;
 import orienteering.orienteering.Models.QuestionList;
 import orienteering.orienteering.Models.Toughness;
+import orienteering.orienteering.Models.User;
 
 public class QuestionActivity extends AppCompatActivity {
 
@@ -41,6 +45,7 @@ public class QuestionActivity extends AppCompatActivity {
     private RadioButton answer3;
     private RadioButton answer4;
     boolean got_answer = false;
+    Intent intent;
     private Question current_question;
 
     @Override
@@ -50,6 +55,12 @@ public class QuestionActivity extends AppCompatActivity {
 
         randomGenerator = new Random();
         http_manager = new HttpManager(this);
+        intent = getIntent();
+        OrienteeringApplication orienteering_application = (OrienteeringApplication)getApplication();
+        SharedPreferences shared_preferences = orienteering_application.getSharedPreferences();
+        Gson gson = new Gson();
+        User user = gson.fromJson(shared_preferences.getString("user", null), User.class);
+        final int user_id = user.getId();
         question_text = (TextView)findViewById(R.id.question_textview);
         question_handler = new QuestionHandler(this);
         question_handler.getQuestionList(getQuestionListCallback);
@@ -90,13 +101,14 @@ public class QuestionActivity extends AppCompatActivity {
 
                     if (correct_answer != null && answer == correct_answer.getAnswer()) {
                         Toast.makeText(getApplicationContext(), "Correct!", Toast.LENGTH_LONG).show();
-                        points_handler.changeUserPoints(changeUserPoints, current_question.getId());
+                        Log.e("OKK", intent.getIntExtra("route_id", 0) + " " + user_id + " " + current_question.getPlusPoint());
+                        points_handler.changeUserPoints(changeUserPoints, intent.getIntExtra("route_id", 0), user_id, current_question.getPlusPoint());
                         current_question = null;
                         finish();
                         //PERSONEN HAR SVARET RIGTIGT!
                     } else {
                         Toast.makeText(getApplicationContext(), "Wrong!", Toast.LENGTH_LONG).show();
-                        points_handler.changeUserPoints(changeUserPoints, current_question.getId());
+                        points_handler.changeUserPoints(changeUserPoints, intent.getIntExtra("route_id", 0), user_id, current_question.getMinusPoint());
                         current_question = null;
                         finish();
                         //PERSONEN HAR SVARET FORKERT!

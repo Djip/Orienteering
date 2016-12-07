@@ -91,7 +91,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if(marker.getId().equals(gpsLocation.getUserMarker().getId())){
 
                 } else {
-                    Log.e("OKK", marker.getId() + "------" + gpsLocation.getUserMarker().getId());
                     LatLng lat_lng = marker.getPosition();
                     float[] distance = new float[1];
                     Location.distanceBetween(gpsLocation.lat, gpsLocation.lon, lat_lng.latitude, lat_lng.longitude, distance);
@@ -102,6 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Intent intent = new Intent(MapsActivity.this, QuestionActivity.class);
                         intent.putExtra("category_id", category_id);
                         intent.putExtra("toughness_id", toughness_id);
+                        intent.putExtra("route_id", intent.getIntExtra("route_id", 0));
                         startActivity(intent);
                     }
                 }

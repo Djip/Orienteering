@@ -25,7 +25,7 @@ public class PointsHandler {
         }
 
         public void changeUserPoints(DeserializeCallback deserializeCallback, int route_id, int user_id, int points){
-            httpManager.pulldata(deserializeCallback, new String[]{"get", "route_id", "user_id", "points"}, new String[]{"answer_list", String.valueOf(route_id), String.valueOf(user_id), String.valueOf(points)});
+            httpManager.pulldata(deserializeCallback, new String[]{"get", "route_id", "user_id", "points"}, new String[]{"change_user_points", String.valueOf(route_id), String.valueOf(user_id), String.valueOf(points)});
         }
 
     }
