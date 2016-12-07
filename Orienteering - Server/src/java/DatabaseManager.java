@@ -504,19 +504,25 @@ public class DatabaseManager {
         String status = "error";
 
         try {
-            String sql = "INSERT INTO point_of_interest(latitude, longitude) VALUES(?, ?)";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDouble(1, point_of_interest.getLatitude());
-            pstmt.setDouble(2, point_of_interest.getLongitude());
+            point_of_interest.setId(getPointOfInterest(false, point_of_interest.getLatitude(), point_of_interest.getLongitude()));
+            
+            int rows = 0;
+            if (point_of_interest.getId() == 0)
+            {
+                String sql = "INSERT INTO point_of_interest(latitude, longitude) VALUES(?, ?)";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setDouble(1, point_of_interest.getLatitude());
+                pstmt.setDouble(2, point_of_interest.getLongitude());
 
-            int rows = pstmt.executeUpdate();
+                rows = pstmt.executeUpdate();
+            }
 
-            if (rows == 1) {
-                point_of_interest.setId(getLatestPointOfInterest(false));
+            if (point_of_interest.getId() != 0 || rows == 1) {
+                point_of_interest.setId(getPointOfInterest(false, point_of_interest.getLatitude(), point_of_interest.getLongitude()));
 
                 if (point_of_interest.getId() != 0) {
-                    sql = "INSERT INTO route_point_of_interest_rel(route_id, point_of_interest_id) VALUES(?, ?)";
-                    pstmt = conn.prepareStatement(sql);
+                    String sql = "INSERT INTO route_point_of_interest_rel(route_id, point_of_interest_id) VALUES(?, ?)";
+                    PreparedStatement pstmt = conn.prepareStatement(sql);
                     pstmt.setInt(1, route_id);
                     pstmt.setInt(2, point_of_interest.getId());
 
@@ -538,12 +544,16 @@ public class DatabaseManager {
         return status;
     }
 
-    private int getLatestPointOfInterest(boolean close_connection) {
+    private int getPointOfInterest(boolean close_connection, double latitude, double longitude) {
         int point_of_interest_id = 0;
 
         try {
-            String sql = "SELECT id FROM point_of_interest ORDER BY id DESC LIMIT 1";
-            ResultSet rs = stmt.executeQuery(sql);
+            String sql = "SELECT id FROM point_of_interest WHERE latitude = ? AND longitude = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setDouble(1, latitude);
+            pstmt.setDouble(2, longitude);
+            
+            ResultSet rs = pstmt.executeQuery();
 
             // Extract data from result set
             while (rs.next()) {
@@ -561,6 +571,33 @@ public class DatabaseManager {
         }
 
         return point_of_interest_id;
+    }
+    
+    public String removePointOfInterest(PointOfInterest point_of_interest, int route_id)
+    {
+        String status = "error";
+        
+        try
+        {
+            String sql = "DELETE FROM route_point_of_interest_rel WHERE point_of_interest_id = ? AND route_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setDouble(1, point_of_interest.getId());
+            pstmt.setDouble(2, route_id);
+            
+            int rows = pstmt.executeUpdate();
+            
+            if (rows == 1)
+            {
+                status = "success";
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return "error";
+        }
+        
+        return status;
     }
 
     public String emptyPointsEntry(int user_id, int route_id) {
