@@ -53,7 +53,8 @@ public class PlaceHandler extends AsyncTask<Void, Void, MapsPointOfInterestList>
         httpManager = new HttpManager(maps_activity);
     }
 
-    public PlaceHandler(){
+    public PlaceHandler(Activity maps_activity){
+        this.maps_activity = maps_activity;
         httpManager = new HttpManager(maps_activity);
     }
 

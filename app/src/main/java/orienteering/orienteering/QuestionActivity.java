@@ -50,6 +50,7 @@ public class QuestionActivity extends AppCompatActivity {
     private RadioButton answer3;
     private RadioButton answer4;
     boolean got_answer = false;
+    private Activity activity;
     Intent intent;
     private Question current_question;
 
@@ -58,6 +59,7 @@ public class QuestionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
 
+        activity= this;
         randomGenerator = new Random();
         http_manager = new HttpManager(this);
         intent = getIntent();
@@ -77,7 +79,7 @@ public class QuestionActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String response) {
                 try {
-                    if(response.equals("success")){
+                    if(response.trim().equals("success")){
                         Log.e("OKK", "Changed points succesfully");
                     } else {
                         Log.e("OKK", "Error while trying to change points");
@@ -94,7 +96,7 @@ public class QuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (got_answer) {
-                    PlaceHandler place_handler = new PlaceHandler();
+                    PlaceHandler place_handler = new PlaceHandler(activity);
                     RadioGroup radio_group = (RadioGroup) findViewById(R.id.answer_radiogroup);
                     RadioButton checked_radio = (RadioButton) findViewById(radio_group.getCheckedRadioButtonId());
                     String answer = checked_radio.getText().toString();

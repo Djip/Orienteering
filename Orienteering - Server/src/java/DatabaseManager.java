@@ -701,7 +701,11 @@ public class DatabaseManager {
         try {
             String sql = "INSERT INTO point_triggered(route_id, user_id, latitude, longitude, timestamp) VALUES(?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, point_triggered.getRouteId());
+            if (point_triggered.getRouteId() == 0) {
+                pstmt.setNull(1, java.sql.Types.INTEGER);
+            } else {
+                pstmt.setInt(1, point_triggered.getRouteId());
+            }
             pstmt.setInt(2, point_triggered.getUserId());
             pstmt.setDouble(3, point_triggered.getLatitude());
             pstmt.setDouble(4, point_triggered.getLongitude());

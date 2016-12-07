@@ -548,6 +548,7 @@ public class Api extends HttpServlet {
             PointTriggered point_triggered = (PointTriggered) xstream.fromXML(point_triggered_xml);
             
             String status = databaseManager.setPointTriggered(point_triggered);
+            xml = status;
         } catch (Exception e) {
             e.printStackTrace();
         }
