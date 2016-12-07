@@ -1,6 +1,7 @@
 package orienteering.orienteering;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,12 +20,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.vision.text.Line;
 import com.google.android.gms.vision.text.Text;
+import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 
 import orienteering.orienteering.Models.PointOfInterest;
 import orienteering.orienteering.Models.PointOfInterestList;
+import orienteering.orienteering.Models.Question;
+import orienteering.orienteering.Models.QuestionList;
 import orienteering.orienteering.Models.Route;
 import orienteering.orienteering.Models.RouteList;
+import orienteering.orienteering.Models.User;
 
 public class MenuActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, SeekBar.OnSeekBarChangeListener {
     ArrayAdapter<CharSequence> adapter;
@@ -109,10 +114,32 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+        final DeserializeCallback createEmptyPointsEntryCallback = new DeserializeCallback() {
+            @Override
+            public void onSuccess(String response) {
+                try {
+                    if(response.equals("success")){
+                        Log.e("OKK", "Was created, or did create succesfully");
+                    } else {
+                        Log.e("OKK", "Error while trying to create empty entry");
+                    }
+                } catch (Exception e) {
+                    Log.e("OKK", e.getMessage());
+                }
+            }
+        };
+
         Button next = (Button)findViewById(R.id.get_game);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final PointsHandler points_handler = new PointsHandler(MenuActivity.this);
+                OrienteeringApplication orienteering_application = (OrienteeringApplication)getApplication();
+                SharedPreferences shared_preferences = orienteering_application.getSharedPreferences();
+                Gson gson = new Gson();
+                User user = gson.fromJson(shared_preferences.getString("user", null), User.class);
+                final int user_id = user.getId();
+
                 if(create_game.isChecked()) {
                     Intent intent = new Intent(MenuActivity.this, CreateGameActivity.class);
                     startActivity(intent);
@@ -134,10 +161,13 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
                                 intent.putExtra("show_default_point_of_interest", routes.getRoutes().get(0).getShowDefaultPointOfInterest());
                                 startActivity(intent);
                             }
+
+                            points_handler.createEmptyPointEntry(createEmptyPointsEntryCallback, routes.getRoutes().get(0).getId(), user_id);
                         }
                         }, new String[]{"get", "route_code"}, new String[]{"route", String.valueOf(game_code)});
 
                 } else {
+                    points_handler.createEmptyPointEntry(createEmptyPointsEntryCallback, 0, user_id);
                     Intent intent = new Intent(MenuActivity.this, MapsActivity.class);
                     intent.putExtra("show_default_point_of_interest", true);
                     intent.putExtra("toughness", toughness);
@@ -146,6 +176,8 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         });
+
+
 
     }
 

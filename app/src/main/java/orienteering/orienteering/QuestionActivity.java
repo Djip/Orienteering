@@ -41,6 +41,7 @@ public class QuestionActivity extends AppCompatActivity {
     private RadioButton answer3;
     private RadioButton answer4;
     boolean got_answer = false;
+    private Question current_question;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,22 @@ public class QuestionActivity extends AppCompatActivity {
         question_handler.getQuestionList(getQuestionListCallback);
         category = new Category(getIntent().getIntExtra("category_id", 0));
         toughness = new Toughness(getIntent().getIntExtra("toughness_id", 0));
+        final PointsHandler points_handler = new PointsHandler(this);
 
+        final DeserializeCallback changeUserPoints = new DeserializeCallback() {
+            @Override
+            public void onSuccess(String response) {
+                try {
+                    if(response.equals("success")){
+                        Log.e("OKK", "Changed points succesfully");
+                    } else {
+                        Log.e("OKK", "Error while trying to change points");
+                    }
+                } catch (Exception e) {
+                    Log.e("OKK", e.getMessage());
+                }
+            }
+        };
 
         final Button next = (Button)findViewById(R.id.answer_question);
         next.setOnClickListener(new View.OnClickListener() {
@@ -74,10 +90,14 @@ public class QuestionActivity extends AppCompatActivity {
 
                     if (correct_answer != null && answer == correct_answer.getAnswer()) {
                         Toast.makeText(getApplicationContext(), "Correct!", Toast.LENGTH_LONG).show();
+                        points_handler.changeUserPoints(changeUserPoints, current_question.getId());
+                        current_question = null;
                         finish();
                         //PERSONEN HAR SVARET RIGTIGT!
                     } else {
                         Toast.makeText(getApplicationContext(), "Wrong!", Toast.LENGTH_LONG).show();
+                        points_handler.changeUserPoints(changeUserPoints, current_question.getId());
+                        current_question = null;
                         finish();
                         //PERSONEN HAR SVARET FORKERT!
                     }
@@ -140,6 +160,7 @@ public class QuestionActivity extends AppCompatActivity {
                 question_handler.getAnswerByQuestionId(getAnswerListCallback, question_id);
 
                 question_text.setText(question_list.getQuestions().get(index).getQuestion());
+                current_question = question_list.getQuestions().get(index);
             } catch (Exception e) {
                 Log.e("OKK", e.getMessage());
             }
