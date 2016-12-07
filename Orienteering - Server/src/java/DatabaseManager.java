@@ -1,221 +1,180 @@
 // Loading required libraries
+
 import java.util.*;
 import java.sql.*;
 
-public class DatabaseManager{
+public class DatabaseManager {
+
     final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     final String DB_URL = "jdbc:mysql://85.233.225.116:3306/orienteering";
 
     //  Database credentials
     final String USER = "root";
     final String PASS = "demo123";
-        
+
     private Connection conn = null;
     private Statement stmt = null;
-    
-    public DatabaseManager()
-    {
+
+    public DatabaseManager() {
         startDatabaseConnection();
     }
-    
-    private void startDatabaseConnection()
-    {
-        try
-        {
+
+    private void startDatabaseConnection() {
+        try {
             Class.forName(JDBC_DRIVER);
 
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            
+
             stmt = conn.createStatement();
-        }
-        catch(SQLException se)
-        {
+        } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
         }
     }
-    
-    private void closeDatabaseConnection()
-    {
-        try
-        {
-            if(stmt != null)
-            {
-               stmt.close();
+
+    private void closeDatabaseConnection() {
+        try {
+            if (stmt != null) {
+                stmt.close();
             }
-        }
-        catch(SQLException se2){ }// nothing we can do
-        
-        try
-        {
-            if(conn != null)
-            {
+        } catch (SQLException se2) {
+        }// nothing we can do
+
+        try {
+            if (conn != null) {
                 conn.close();
             }
-        }
-        catch(SQLException se)
-        {
+        } catch (SQLException se) {
             se.printStackTrace();
         }
     }
-    
-    public ArrayList<User> getUsers()
-    {
+
+    public ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<User>();
 
-        try
-        {
+        try {
             String sql = "SELECT * FROM user";
             ResultSet rs = stmt.executeQuery(sql);
 
             // Extract data from result set
-            while(rs.next()){
-                int id  = rs.getInt("id");
+            while (rs.next()) {
+                int id = rs.getInt("id");
                 String username = rs.getString("username");
 
                 users.add(new User(id, username));
             }
-            
+
             rs.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-      
+
         return users;
     }
-    
-    public ArrayList<User> checkUsername(String username, boolean close_connection)
-    {
+
+    public ArrayList<User> checkUsername(String username, boolean close_connection) {
         ArrayList<User> users = new ArrayList<User>();
-        
-        try
-        {
+
+        try {
             String sql = "SELECT * FROM user WHERE username = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
 
-            while(rs.next()){
-                int id  = rs.getInt("id");
+            while (rs.next()) {
+                int id = rs.getInt("id");
                 String pulled_username = rs.getString("username");
 
                 users.add(new User(id, pulled_username));
             }
-            
+
             rs.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
-            if (close_connection)
-            {
+        } finally {
+            if (close_connection) {
                 closeDatabaseConnection();
             }
         }
-      
+
         return users;
     }
-    
-    public ArrayList<User> newUser(String username)
-    {
+
+    public ArrayList<User> newUser(String username) {
         ArrayList<User> users = new ArrayList<User>();
-        
+
         ArrayList<User> check_users = checkUsername(username, false);
-        
-        if (check_users != null && check_users.size() != 1 && !username.matches(""))
-        {
-            try
-            {
+
+        if (check_users != null && check_users.size() != 1 && !username.matches("")) {
+            try {
                 String sql = "INSERT INTO user(username, online) VALUES(?, ?)";
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1, username);
                 pstmt.setInt(2, User.ONLINE);
                 int rows = pstmt.executeUpdate();
 
-                if (rows == 1)
-                {
+                if (rows == 1) {
                     users = checkUsername(username, true);
                 }
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 //Handle errors for Class.forName
                 e.printStackTrace();
-            }
-            finally
-            {
+            } finally {
                 closeDatabaseConnection();
             }
         }
-      
+
         return users;
     }
-    
-    public ArrayList<PointOfInterest> getPointOfInterests(int route_id)
-    {
+
+    public ArrayList<PointOfInterest> getPointOfInterests(int route_id) {
         ArrayList<PointOfInterest> point_of_interests = new ArrayList<PointOfInterest>();
 
-        try
-        {
+        try {
             String sql = "SELECT * FROM point_of_interest AS poi JOIN route_point_of_interest_rel AS rpoi ON poi.id = rpoi.point_of_interest_id AND rpoi.route_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, route_id);
             ResultSet rs = pstmt.executeQuery();
 
             // Extract data from result set
-            while(rs.next()){
-                int id  = rs.getInt("id");
+            while (rs.next()) {
+                int id = rs.getInt("id");
                 double latitude = rs.getDouble("latitude");
                 double longitude = rs.getDouble("longitude");
 
                 point_of_interests.add(new PointOfInterest(id, latitude, longitude));
             }
-            
+
             rs.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-      
+
         return point_of_interests;
     }
-    
-    public ArrayList<Route> getRouteFromCode(String code)
-    {
+
+    public ArrayList<Route> getRouteFromCode(String code) {
         ArrayList<Route> route_list = new ArrayList<Route>();
 
-        try
-        {
+        try {
             String sql = "SELECT * FROM route WHERE code = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, code);
             ResultSet rs = pstmt.executeQuery();
-            
+
             // Extract data from result set
-            while(rs.next()){
-                int id  = rs.getInt("id");
+            while (rs.next()) {
+                int id = rs.getInt("id");
                 int user_id = rs.getInt("user_id");
                 int category_id = rs.getInt("category_id");
                 int toughness_id = rs.getInt("toughness_id");
@@ -225,34 +184,28 @@ public class DatabaseManager{
 
                 route_list.add(new Route(id, code, user_id, category_id, toughness_id, gametime, show_default_point_of_interest, show_defined_questions));
             }
-            
+
             rs.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-      
+
         return route_list;
     }
-    
-    public ArrayList<Question> getQuestions()
-    {
+
+    public ArrayList<Question> getQuestions() {
         // FROM ROUTE_ID!!!!
         ArrayList<Question> questions = new ArrayList<Question>();
 
-        try
-        {
+        try {
             String sql = "SELECT * FROM question";
             ResultSet rs = stmt.executeQuery(sql);
 
             // Extract data from result set
-            while(rs.next()){
+            while (rs.next()) {
                 int id = rs.getInt("id");
                 int category_id = rs.getInt("category_id");
                 int toughness_id = rs.getInt("toughness_id");
@@ -263,180 +216,144 @@ public class DatabaseManager{
 
                 questions.add(new Question(id, category_id, toughness_id, question, plus_point, minus_point, route_id));
             }
-            
+
             rs.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-      
+
         return questions;
     }
-    
-    public ArrayList<Category> getCategories()
-    {
+
+    public ArrayList<Category> getCategories() {
         ArrayList<Category> categories = new ArrayList<Category>();
 
-        try
-        {
+        try {
             String sql = "SELECT * FROM category";
             ResultSet rs = stmt.executeQuery(sql);
 
             // Extract data from result set
-            while(rs.next()){
+            while (rs.next()) {
                 int id = rs.getInt("id");
                 String category = rs.getString("category");
 
                 categories.add(new Category(id, category));
             }
-            
+
             rs.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-      
+
         return categories;
     }
-    
-    public ArrayList<Toughness> getToughnessList()
-    {
+
+    public ArrayList<Toughness> getToughnessList() {
         ArrayList<Toughness> toughnessList = new ArrayList<Toughness>();
 
-        try
-        {
+        try {
             String sql = "SELECT * FROM toughness";
             ResultSet rs = stmt.executeQuery(sql);
 
             // Extract data from result set
-            while(rs.next()){
+            while (rs.next()) {
                 int id = rs.getInt("id");
                 String toughness = rs.getString("toughness");
 
                 toughnessList.add(new Toughness(id, toughness));
             }
-            
+
             rs.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-      
+
         return toughnessList;
     }
-    
-    public ArrayList<Answer> getAnswers(int question_id)
-    {
+
+    public ArrayList<Answer> getAnswers(int question_id) {
         ArrayList<Answer> answers = new ArrayList<Answer>();
-        
-        try
-        {
+
+        try {
             String sql = "SELECT * FROM answer WHERE question_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, question_id);
             ResultSet rs = pstmt.executeQuery();
 
             // Extract data from result set
-            while(rs.next()){
-                
+            while (rs.next()) {
+
                 int id = rs.getInt("id");
                 String answer = rs.getString("answer");
                 boolean correct = rs.getBoolean("correct");
 
                 answers.add(new Answer(id, question_id, answer, correct));
             }
-            
+
             rs.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-      
+
         return answers;
     }
-    
-    public ArrayList<Points> getPoints(int user_id, int route_id)
-    {
+
+    public ArrayList<Points> getPoints(int user_id, int route_id) {
         ArrayList<Points> points = new ArrayList<Points>();
-        
-        try
-        {
+
+        try {
             String sql = "SELECT * FROM points WHERE user_id = ? AND route_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            if (user_id == 0)
-            {
+            if (user_id == 0) {
                 pstmt.setNull(1, java.sql.Types.INTEGER);
-            }
-            else
-            {
+            } else {
                 pstmt.setInt(1, user_id);
             }
-            
-            if (route_id == 0)
-            {
+
+            if (route_id == 0) {
                 pstmt.setNull(1, java.sql.Types.INTEGER);
-            }
-            else
-            {
+            } else {
                 pstmt.setInt(1, route_id);
             }
-            
+
             ResultSet rs = pstmt.executeQuery();
 
             // Extract data from result set
-            while(rs.next()){
+            while (rs.next()) {
                 int user_id_data = rs.getInt("user_id");
                 int route_id_data = rs.getInt("route_id");
                 int point = rs.getInt("points");
 
                 points.add(new Points(user_id_data, route_id_data, point));
             }
-            
+
             rs.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-      
+
         return points;
     }
-    
-    public ArrayList<Route> newRoute(Route route)
-    {
+
+    public ArrayList<Route> newRoute(Route route) {
         ArrayList<Route> routes = new ArrayList<Route>();
-        
-        try
-        {
+
+        try {
             String sql = "INSERT INTO route(code, user_id, category_id, toughness_id, gametime, show_default_point_of_interest, show_defined_questions) VALUES(?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, route.getCode());
@@ -446,40 +363,33 @@ public class DatabaseManager{
             pstmt.setInt(5, route.getGametime());
             pstmt.setBoolean(6, route.getShowDefaultPointOfInterest());
             pstmt.setBoolean(7, route.getShowDefinedQuestions());
-            
+
             int rows = pstmt.executeUpdate();
 
-            if (rows == 1)
-            {
+            if (rows == 1) {
                 routes.add(getLastRoute(route.getUserId()));
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-        
+
         return routes;
     }
-    
-    public Route getLastRoute(int user_id)
-    {
+
+    public Route getLastRoute(int user_id) {
         Route route = new Route();
-        
-        try
-        {
+
+        try {
             String sql = "SELECT * FROM route WHERE user_id = ? ORDER BY id DESC LIMIT 1";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, user_id);
             ResultSet rs = pstmt.executeQuery();
 
             // Extract data from result set
-            while(rs.next()){
+            while (rs.next()) {
                 route.setId(rs.getInt("id"));
                 route.setCode(rs.getString("code"));
                 route.setCategoryId(rs.getInt("category_id"));
@@ -488,28 +398,22 @@ public class DatabaseManager{
                 route.setShowDefaultPointOfInterest(rs.getBoolean("show_default_point_of_interest"));
                 route.setShowDefinedQuestions(rs.getBoolean("show_defined_questions"));
             }
-            
+
             rs.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-      
+
         return route;
     }
-    
-    public Question newQuestion(Question question)
-    {
+
+    public Question newQuestion(Question question) {
         Question new_question = null;
-        
-        try
-        {
+
+        try {
             String sql = "INSERT INTO question(category_id, toughness_id, question, plus_point, minus_point, route_id) VALUES(?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, question.getCategoryId());
@@ -518,40 +422,33 @@ public class DatabaseManager{
             pstmt.setInt(4, question.getPlusPoint());
             pstmt.setInt(5, question.getMinusPoint());
             pstmt.setInt(6, question.getRouteId());
-            
+
             int rows = pstmt.executeUpdate();
 
-            if (rows == 1)
-            {
+            if (rows == 1) {
                 new_question = getLatestQuestion(question.getRouteId());
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-        
+
         return new_question;
     }
-    
-    public Question getLatestQuestion(int route_id)
-    {
+
+    public Question getLatestQuestion(int route_id) {
         Question question = new Question();
-        
-        try
-        {
+
+        try {
             String sql = "SELECT * FROM question WHERE route_id = ? ORDER BY id DESC LIMIT 1";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, route_id);
             ResultSet rs = pstmt.executeQuery();
 
             // Extract data from result set
-            while(rs.next()){
+            while (rs.next()) {
                 question.setId(rs.getInt("id"));
                 question.setCategoryId(rs.getInt("category_id"));
                 question.setToughnessId(rs.getInt("toughness_id"));
@@ -560,30 +457,23 @@ public class DatabaseManager{
                 question.setMinusPoint(rs.getInt("minus_point"));
                 question.setRouteId(rs.getInt("route_id"));
             }
-            
+
             rs.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-      
+
         return question;
     }
-    
-    public String newAnswers(List<Answer> answers)
-    {
+
+    public String newAnswers(List<Answer> answers) {
         String status = "error";
-        
-        try
-        {
-            for (Answer answer : answers)
-            {
+
+        try {
+            for (Answer answer : answers) {
                 String sql = "INSERT INTO answer(question_id, answer, correct) VALUES(?, ?, ?)";
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 pstmt.setInt(1, answer.getQuestionId());
@@ -591,38 +481,29 @@ public class DatabaseManager{
                 pstmt.setBoolean(3, answer.getCorrect());
 
                 int rows = pstmt.executeUpdate();
-                
-                if (rows == 1)
-                {
+
+                if (rows == 1) {
                     status = "success";
-                }
-                else
-                {
+                } else {
                     status = "error";
                     break;
                 }
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
             return "error";
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-        
+
         return status;
     }
-    
-    public String newPointOfInterest(PointOfInterest point_of_interest, int route_id)
-    {
+
+    public String newPointOfInterest(PointOfInterest point_of_interest, int route_id) {
         String status = "error";
-        
-        try
-        {
+
+        try {
             String sql = "INSERT INTO point_of_interest(latitude, longitude) VALUES(?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setDouble(1, point_of_interest.getLatitude());
@@ -630,165 +511,147 @@ public class DatabaseManager{
 
             int rows = pstmt.executeUpdate();
 
-            if (rows == 1)
-            {
+            if (rows == 1) {
                 point_of_interest.setId(getLatestPointOfInterest(false));
-                
-                if (point_of_interest.getId() != 0)
-                {
+
+                if (point_of_interest.getId() != 0) {
                     sql = "INSERT INTO route_point_of_interest_rel(route_id, point_of_interest_id) VALUES(?, ?)";
                     pstmt = conn.prepareStatement(sql);
                     pstmt.setInt(1, route_id);
                     pstmt.setInt(2, point_of_interest.getId());
-                    
+
                     rows = pstmt.executeUpdate();
 
-                    if (rows == 1)
-                    {
+                    if (rows == 1) {
                         status = "success";
                     }
                 }
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
             return "error";
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-        
+
         return status;
     }
-    
-    private int getLatestPointOfInterest(boolean close_connection)
-    {   
+
+    private int getLatestPointOfInterest(boolean close_connection) {
         int point_of_interest_id = 0;
-        
-        try
-        {
+
+        try {
             String sql = "SELECT id FROM point_of_interest ORDER BY id DESC LIMIT 1";
             ResultSet rs = stmt.executeQuery(sql);
 
             // Extract data from result set
-            while(rs.next()){
+            while (rs.next()) {
                 point_of_interest_id = rs.getInt("id");
             }
-            
+
             rs.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-        finally
-        {
-            if (close_connection)
-            {
+        } finally {
+            if (close_connection) {
                 closeDatabaseConnection();
             }
         }
-        
+
         return point_of_interest_id;
     }
-    
-    public String emptyPointsEntry(int user_id, int route_id){
 
+    public String emptyPointsEntry(int user_id, int route_id) {
+        boolean is_created = false;
         String status = "error";
-        
-        try
-        {
-            String sql = "INSERT INTO points(user_id, route_id, points) VALUES(?, ?, ?)";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, user_id);
-            if (route_id == 0)
-            {
-                pstmt.setNull(2, java.sql.Types.INTEGER);
-            }
-            else
-            {
-                pstmt.setInt(2, route_id);
-            }
-            
-            pstmt.setInt(3, 0);
 
-            int rows = pstmt.executeUpdate();
+        try {
+            String sql_get = "SELECT * FROM points where user_id = ? AND route_id = ?";
+            PreparedStatement pstmt_get = conn.prepareStatement(sql_get);
+            pstmt_get.setInt(1, user_id);
+            if (route_id == 0) {
+                pstmt_get.setNull(2, java.sql.Types.INTEGER);
+            } else {
+                pstmt_get.setInt(2, route_id);
+            }
 
-            if (rows == 1)
-            {
+            ResultSet rs = pstmt_get.executeQuery();
+
+            while (rs != null && rs.next()) {
+                is_created = true;
                 status = "success";
             }
-            else
-            {
-                status = "error";
+            rs.close();
+
+            if (is_created == false) {
+                String sql = "INSERT INTO points(user_id, route_id, points) VALUES(?, ?, ?)";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, user_id);
+                if (route_id == 0) {
+                    pstmt.setNull(2, java.sql.Types.INTEGER);
+                } else {
+                    pstmt.setInt(2, route_id);
+                }
+
+                pstmt.setInt(3, 0);
+
+                int rows = pstmt.executeUpdate();
+
+                if (rows == 1) {
+                    status = "success";
+                } else {
+                    status = "error";
+                }
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
             return "error";
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-        
+
         return status;
     }
-    
-    
-    public String changeUserPoints(int user_id, int route_id, int points){
+
+    public String changeUserPoints(int user_id, int route_id, int points) {
         String status = "error";
-        
-        try
-        {
+
+        try {
             String sql = "";
-            
-            if(points < 0){
+
+            if (points < 0) {
                 sql = "UPDATE points SET points = points ? WHERE user_id = ? AND route_id = ?";
             } else {
                 sql = "UPDATE points SET points = points + ? WHERE user_id = ? AND route_id = ?";
             }
-            
+
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, points);
             pstmt.setInt(2, user_id);
-            if (route_id == 0)
-            {
+            if (route_id == 0) {
                 pstmt.setNull(3, java.sql.Types.INTEGER);
-            }
-            else
-            {
+            } else {
                 pstmt.setInt(3, route_id);
             }
 
             int rows = pstmt.executeUpdate();
 
-            if (rows == 1)
-            {
+            if (rows == 1) {
                 status = "success";
-            }
-            else
-            {
+            } else {
                 status = "error";
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
             return "error";
-        }
-        finally
-        {
+        } finally {
             closeDatabaseConnection();
         }
-        
+
         return status;
     }
 }
