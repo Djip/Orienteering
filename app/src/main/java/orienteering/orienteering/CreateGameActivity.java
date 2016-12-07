@@ -190,7 +190,6 @@ public class CreateGameActivity extends AppCompatActivity {
 
     public void continueToCreateRoutePoints(View v)
     {
-        route = new Route(5, "test", 0, 0, 0, 0, false, false);
         Intent intent = new Intent(CreateGameActivity.this, CreateRoutePoints.class);
         intent.putExtra("route_id", route.getId());
         startActivity(intent);
