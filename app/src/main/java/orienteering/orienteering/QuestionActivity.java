@@ -29,6 +29,7 @@ import orienteering.orienteering.Models.Answer;
 import orienteering.orienteering.Models.AnswerList;
 import orienteering.orienteering.Models.Category;
 import orienteering.orienteering.Models.PointTriggered;
+import orienteering.orienteering.Models.PointTriggeredList;
 import orienteering.orienteering.Models.Question;
 import orienteering.orienteering.Models.QuestionList;
 import orienteering.orienteering.Models.Toughness;
@@ -54,10 +55,12 @@ public class QuestionActivity extends AppCompatActivity {
     Intent intent;
     private Question current_question;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
+
 
         activity= this;
         randomGenerator = new Random();
