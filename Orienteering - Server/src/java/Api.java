@@ -442,7 +442,7 @@ public class Api extends HttpServlet {
 
     private String newQuestion(String question_xml) {
         String xml = "";
-        return question_xml;
+        
         try {
             XStream xstream = new XStream();
             xstream.alias("question", Question.class);
