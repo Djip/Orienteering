@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_activity_maps">Kort</string>
     <string name="app_name">Orienteringsløb</string>
     <string name="start">Start</string>
     <string name="create_game">Opret spil</string>
@@ -16,6 +17,10 @@
     <string name="minus_point">minus point</string>
     <string name="add_question_error">Tilføjelse af spørgsmål fejlet</string>
     <string name="choose_answer">Du skal vælge et svar</string>
+    <string name="choose_username">Vælg et brugernavn</string>
+    <string name="choose_level">Vælg niveau</string>
+    <string name="choose_subject">Vælg fag</string>
+
 
     <string-array name="subject_array">
         <item>Matematik</item>
@@ -24,10 +29,27 @@
         <item>Biologi</item>
         <item>Geografi</item>
     </string-array>
-
-    <string name="choose_username">Vælg et brugernavn</string>
-    <string name="choose_level">Vælg niveau</string>
-    <string name="choose_subject">Vælg fag</string>
+    <string name="answer1">Svar 1</string>
+    <string name="answer2">Svar 2</string>
+    <string name="answer3">Svar 3</string>
+    <string name="answer4">Svar 4</string>
+    <string name="clear_point">Ryd punkt</string>
+    <string name="correct_answer">Rigtigt svar</string>
+    <string name="create">Opret</string>
+    <string name="create_point">Opret punkt</string>
+    <string name="create_point_error">Fejl, forsøg at gemme igen</string>
+    <string name="create_point_error_no_point">Klik på kortet og opret et punkt inden du gemmer</string>
+    <string name="create_point_info">Tryk på kortet for at sætte et nyt punkt/flytte nuværende punkt. Klik på Opret punkt når punktet er klar. For at fjerne et punkt, tryk på det, og tryk på Fjern punkt.</string>
+    <string name="create_point_success">Punktet er tilføjet</string>
+    <string name="create_questions">Opret spørgsmål</string>
+    <string name="gametime">Spilletid(minutter)</string>
+    <string name="done">Færdig</string>
+    <string name="new_code">Spilkode (maks 10 karaterer)</string>
+    <string name="question">Spørgsmål</string>
+    <string name="remove_point_error">fejl, forsøg at fjerne punktet igen</string>
+    <string name="remove_point_error_no_point">Du skal vælge et punkt for at slette det</string>
+    <string name="remove_point_success">Punkt fjernet</string>
+    <string name="show_defined_questions">Benyt allerede oprettede spørgsmål indenfor samme kategori og sværhedsgrad?</string>
 
 
 </resources>
