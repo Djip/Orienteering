@@ -138,7 +138,7 @@ public class GpsLocation implements LocationListener{
                 for(LatLng lat_lon : points_lat_lng_list){
                     Location.distanceBetween(lat, lon, lat_lon.latitude, lat_lon.longitude, distance);
                     if (distance[0] < 30){
-                        this.points_within_reach.add(lat_lon);
+                        //this.points_within_reach.add(lat_lon);
                     }
                 }
             }

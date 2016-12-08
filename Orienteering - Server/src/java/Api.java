@@ -7,6 +7,7 @@
 import com.thoughtworks.xstream.XStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
@@ -41,12 +42,12 @@ public class Api extends HttpServlet {
                         break;
 
                     case "check_username":
-                        String check_username = request.getParameter("username");
+                        String check_username = URLDecoder.decode(request.getParameter("username"), "UTF-8");
                         xml = checkUsername(check_username);
                         break;
 
                     case "new_user":
-                        String new_username = request.getParameter("username");
+                        String new_username = URLDecoder.decode(request.getParameter("username"), "UTF-8");
                         xml = newUser(new_username);
                         break;
 
@@ -101,17 +102,17 @@ public class Api extends HttpServlet {
                         break;
 
                     case "create_route":
-                        String route_xml = request.getParameter("route");
+                        String route_xml = URLDecoder.decode(request.getParameter("route"), "UTF-8");
                         xml = newRoute(route_xml);
                         break;
 
                     case "create_question":
-                        String question_xml = request.getParameter("question");
+                        String question_xml = URLDecoder.decode(request.getParameter("question"), "UTF-8");
                         xml = newQuestion(question_xml);
                         break;
 
                     case "create_answers":
-                        String answers_xml = request.getParameter("answers");
+                        String answers_xml = URLDecoder.decode(request.getParameter("answers"), "UTF-8");
                         xml = newAnswers(answers_xml);
                         break;
 
@@ -441,7 +442,7 @@ public class Api extends HttpServlet {
 
     private String newQuestion(String question_xml) {
         String xml = "";
-
+        return question_xml;
         try {
             XStream xstream = new XStream();
             xstream.alias("question", Question.class);

@@ -158,6 +158,8 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
                             RouteList routes = (RouteList)xstream.fromXML(response);
                             if(routes.getRoutes() != null && routes.getRoutes().size() == 1){
                                 intent.putExtra("route_id", routes.getRoutes().get(0).getId());
+                                intent.putExtra("category", routes.getRoutes().get(0).getCategoryId());
+                                intent.putExtra("toughness", routes.getRoutes().get(0).getToughnessId());
                                 intent.putExtra("show_default_point_of_interest", routes.getRoutes().get(0).getShowDefaultPointOfInterest());
                                 startActivity(intent);
                             }
