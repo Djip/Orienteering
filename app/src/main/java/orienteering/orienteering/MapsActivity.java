@@ -114,7 +114,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     LatLng lat_lng = marker.getPosition();
                     float[] distance = new float[1];
                     Location.distanceBetween(gpsLocation.lat, gpsLocation.lon, lat_lng.latitude, lat_lng.longitude, distance);
-                    if (distance[0] > 2000) {
+                    if (distance[0] > 15) {
                         marker.setTitle("Du er: " + distance[0] + "m fra punktet - du skal tættere på!");
                         //question_textview.setText("Du er: " + distance[0] + "m fra punktet - du skal tættere på!");
                     } else {
